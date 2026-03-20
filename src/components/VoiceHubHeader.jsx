@@ -44,6 +44,9 @@ export default function VoiceHubHeader() {
             <a href="/jobs" className="text-gray-700 hover:text-cyan-600 transition-colors font-medium">
               Jobs
             </a>
+            <a href="/proposal" className="text-gray-700 hover:text-cyan-600 transition-colors font-medium">
+              My proposals
+            </a>
           </div>
 
           {/* Desktop Buttons */}

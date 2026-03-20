@@ -8,12 +8,17 @@ import AuthLayout from './components/Layout/AuthLayout'
 import ArtistsList from './pages/Artists/ArtistsList'
 import CreateJob from "./pages/Jobs/CreateJob"
 import JobLists from "./pages/Jobs/JobLists"
+import ProfilePage from './pages/Profile/ProfilePage'
+import ClientProposal from './pages/Profile/ClientProposal'
+
 const router = createBrowserRouter(createRoutesFromElements(
   <>
       <Route path='/' element={<MainLayout/>}>
               <Route index element={<Home/>}/>
               <Route path='marketplace/' element={<ArtistsList/>}/>
+              <Route path='profile/' element={<ProfilePage/>}/>
               <Route path='createProject/' element={<CreateJob/>}/>
+              <Route path='proposal/' element={<ClientProposal/>}/>
               <Route path='jobs/' element={<JobLists/>}/>
       </Route>
       <Route path='/auth' element={<AuthLayout/>}>
