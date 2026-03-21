@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { User, MapPin, Clock, Languages, Upload, CheckCircle, X } from "lucide-react";
+import { Input } from "../../../components/ui/input";
 
 export default function ProfileSummaryForm() {
   const [formData, setFormData] = useState({
@@ -202,16 +203,16 @@ export default function ProfileSummaryForm() {
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <User className="h-5 w-5 text-gray-400" />
                 </div>
-                <input
+                <Input
                   id="artistName"
                   type="text"
                   value={formData.artistName}
                   onChange={(e) =>
                     setFormData({ ...formData, artistName: e.target.value })
                   }
-                  className={`block w-full pl-10 pr-3 py-3 border ${
+                  className={`${
                     errors.artistName ? 'border-red-500' : 'border-gray-300'
-                  } rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200`}
+                  } `}
                   placeholder="Enter your artist name"
                 />
               </div>
@@ -232,15 +233,15 @@ export default function ProfileSummaryForm() {
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Languages className="h-5 w-5 text-gray-400" />
                 </div>
-                <input
+                <Input
                   id="dubbingLanguages"
                   type="text"
                   value={dubbingLanguageInput}
                   onChange={(e) => setDubbingLanguageInput(e.target.value)}
                   onKeyDown={handleDubbingLanguageKeyDown}
-                  className={`block w-full pl-10 pr-3 py-3 border ${
+                  className={` ${
                     errors.dubbingLanguages ? 'border-red-500' : 'border-gray-300'
-                  } rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200`}
+                  } `}
                   placeholder="Type a language and press Enter"
                 />
               </div>
@@ -287,14 +288,14 @@ export default function ProfileSummaryForm() {
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <MapPin className="h-5 w-5 text-gray-400" />
                 </div>
-                <input
+                <Input
                   id="location"
                   type="text"
                   value={formData.location}
                   onChange={(e) =>
                     setFormData({ ...formData, location: e.target.value })
                   }
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+                  className=""
                   placeholder="Enter your location"
                 />
               </div>
@@ -312,14 +313,14 @@ export default function ProfileSummaryForm() {
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Clock className="h-5 w-5 text-gray-400" />
                 </div>
-                <input
+                <Input
                   id="experience"
                   type="text"
                   value={formData.experience}
                   onChange={(e) =>
                     setFormData({ ...formData, experience: e.target.value })
                   }
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+                  className=""
                   placeholder="e.g., 2 years, 5+ years"
                 />
               </div>
@@ -337,15 +338,15 @@ export default function ProfileSummaryForm() {
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Languages className="h-5 w-5 text-gray-400" />
                 </div>
-                <input
+                <Input
                   id="languagesKnown"
                   type="text"
                   value={languagesKnownInput}
                   onChange={(e) => setLanguagesKnownInput(e.target.value)}
                   onKeyDown={handleLanguagesKnownKeyDown}
-                  className={`block w-full pl-10 pr-3 py-3 border ${
+                  className={` ${
                     errors.languagesKnown ? 'border-red-500' : 'border-gray-300'
-                  } rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200`}
+                  } `}
                   placeholder="Type a language and press Enter"
                 />
               </div>

@@ -19,6 +19,8 @@ import {
 } from 'lucide-react';
 import { Input } from '../../../components/ui/input';
 import { Textarea } from '../../../components/ui/textarea';
+import {Select,SelectTrigger,SelectItem,SelectContent, SelectLabel, SelectGroup,SelectValue} from "../../../components/ui/select"
+import { Button } from '../../../components/ui/Button';
 
 export default function PortfolioUploadForm() {
   const [formData, setFormData] = useState({
@@ -378,10 +380,10 @@ export default function PortfolioUploadForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-fuchsia-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen  py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
+        
+        {/* <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
             <div className="bg-gradient-to-r from-violet-600 to-fuchsia-600 p-4 rounded-2xl shadow-xl">
               <Mic className="w-8 h-8 text-white" />
@@ -393,7 +395,7 @@ export default function PortfolioUploadForm() {
           <p className="text-lg text-gray-600">
             Showcase your dubbing artistry and attract clients
           </p>
-        </div>
+        </div> */}
 
         {/* Success Message */}
         {isSubmitted && (
@@ -406,7 +408,7 @@ export default function PortfolioUploadForm() {
         )}
 
         {/* Form Card */}
-        <div className="bg-white rounded-3xl shadow-2xl p-8 border border-gray-100">
+       <div>
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Section 1: Basic Project Info */}
             <div className="space-y-6">
@@ -431,7 +433,7 @@ export default function PortfolioUploadForm() {
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Type className="h-5 w-5 text-gray-400" />
                   </div>
-                  <input
+                  {/* <input
                     id="title"
                     name="title"
                     type="text"
@@ -441,7 +443,7 @@ export default function PortfolioUploadForm() {
                       errors.title ? 'border-red-500' : 'border-gray-300'
                     } rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-all duration-200`}
                     placeholder="e.g. Hindi Ad Voiceover for FMCG Brand"
-                  />
+                  /> */}
                   <Input
                     id="title"
                     type="text"
@@ -470,7 +472,7 @@ export default function PortfolioUploadForm() {
                 >
                   Description <span className="text-red-500">*</span>
                 </label>
-                <textarea
+                {/* <textarea
                   id="description"
                   name="description"
                   value={formData.description}
@@ -481,7 +483,7 @@ export default function PortfolioUploadForm() {
                     errors.description ? 'border-red-500' : 'border-gray-300'
                   } rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-all duration-200 resize-none`}
                   placeholder="Describe your voice type (deep, energetic, emotional, etc.) and project details..."
-                />
+                /> */}
                  <Textarea
                     id="description"
                     rows={5}
@@ -638,10 +640,10 @@ export default function PortfolioUploadForm() {
                   Voice Category <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  {/* <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Mic className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <select
+                  </div> */}
+                  {/* <select
                     id="voiceCategory"
                     name="voiceCategory"
                     value={formData.voiceCategory}
@@ -656,8 +658,8 @@ export default function PortfolioUploadForm() {
                         {category}
                       </option>
                     ))}
-                  </select>
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                  </select> */}
+                  {/* <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     <svg
                       className="h-5 w-5 text-gray-400"
                       xmlns="http://www.w3.org/2000/svg"
@@ -670,7 +672,7 @@ export default function PortfolioUploadForm() {
                         clipRule="evenodd"
                       />
                     </svg>
-                  </div>
+                  </div> */}
                 </div>
                 {errors.voiceCategory && (
                   <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
@@ -678,6 +680,31 @@ export default function PortfolioUploadForm() {
                     {errors.voiceCategory}
                   </p>
                 )}
+                  <Select id="voiceCategory"
+                    name="voiceCategory"
+                    
+                    onChange={handleInputChange}
+                    >
+                           <SelectTrigger>
+                                 <div className='flex'>
+                                    
+                                  <Mic className="h-5 w-5 text-gray-400" />
+                  
+                                  <SelectValue placeholder="Select Voice Category" />
+                                 </div>
+                           </SelectTrigger>
+                           <SelectContent>
+                                  <SelectGroup>
+                                     <SelectLabel>--Choose--</SelectLabel>
+                                    {voiceCategories.map((category) => (
+                                      <SelectItem key={category} value={category}>
+                                        {category}
+                                      </SelectItem>
+                                    ))} 
+                                  </SelectGroup>
+                                
+                           </SelectContent>
+                       </Select>
               </div>
 
               {/* Languages */}
@@ -692,15 +719,15 @@ export default function PortfolioUploadForm() {
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Languages className="h-5 w-5 text-gray-400" />
                   </div>
-                  <input
+                  <Input
                     id="languages"
                     type="text"
                     value={languageInput}
                     onChange={(e) => setLanguageInput(e.target.value)}
                     onKeyDown={handleLanguageKeyDown}
-                    className={`block w-full pl-10 pr-3 py-3 border ${
+                    className={`${
                       errors.languages ? 'border-red-500' : 'border-gray-300'
-                    } rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-all duration-200`}
+                    } `}
                     placeholder="Type a language and press Enter"
                   />
                 </div>
@@ -765,12 +792,12 @@ export default function PortfolioUploadForm() {
 
                 {/* Custom Input */}
                 <div className="relative">
-                  <input
+                  <Input
                     type="text"
                     value={voiceStyleInput}
                     onChange={(e) => setVoiceStyleInput(e.target.value)}
                     onKeyDown={handleVoiceStyleKeyDown}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-all duration-200 text-sm"
+                    className=""
                     placeholder="Or type custom style and press Enter"
                   />
                 </div>
@@ -844,13 +871,13 @@ export default function PortfolioUploadForm() {
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <User className="h-5 w-5 text-gray-400" />
                   </div>
-                  <input
+                  <Input
                     id="clientName"
                     name="clientName"
                     type="text"
                     value={formData.clientName}
                     onChange={handleInputChange}
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-all duration-200"
+                    className=""
                     placeholder="e.g. Coca-Cola, Netflix"
                   />
                 </div>
@@ -886,7 +913,7 @@ export default function PortfolioUploadForm() {
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                       <Star className="h-5 w-5 text-yellow-400 fill-yellow-400" />
                     </div>
-                    <input
+                    <Input
                       id="rating"
                       name="rating"
                       type="number"
@@ -895,7 +922,7 @@ export default function PortfolioUploadForm() {
                       step="0.1"
                       value={formData.rating}
                       onChange={handleInputChange}
-                      className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-all duration-200"
+                      className=""
                       placeholder="e.g. 4.5"
                     />
                   </div>
@@ -913,13 +940,13 @@ export default function PortfolioUploadForm() {
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                       <Calendar className="h-5 w-5 text-gray-400" />
                     </div>
-                    <input
+                    <Input
                       id="completionDate"
                       name="completionDate"
                       type="date"
                       value={formData.completionDate}
                       onChange={handleInputChange}
-                      className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-all duration-200"
+                      className=""
                     />
                   </div>
                 </div>
@@ -937,13 +964,13 @@ export default function PortfolioUploadForm() {
                   <div className="absolute top-3 left-3 pointer-events-none">
                     <MessageSquare className="h-5 w-5 text-gray-400" />
                   </div>
-                  <textarea
+                  <Textarea
                     id="clientFeedback"
                     name="clientFeedback"
                     value={formData.clientFeedback}
                     onChange={handleInputChange}
                     rows="3"
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-all duration-200 resize-none"
+                    className=""
                     placeholder="Share what the client said about your work..."
                   />
                 </div>
@@ -1028,27 +1055,28 @@ export default function PortfolioUploadForm() {
 
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t-2 border-gray-100">
-              <button
+              <Button
+                variant="outline"
                 type="submit"
                 disabled={!isFormValid()}
-                className={`flex-1 py-4 px-8 rounded-xl font-bold text-lg focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-violet-500 transform transition-all duration-200 shadow-xl ${
+                className={`cursor-pointer ${
                   isFormValid()
                     ? 'bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 text-white hover:from-violet-700 hover:via-purple-700 hover:to-fuchsia-700 hover:scale-[1.02] hover:shadow-2xl'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >
                 {isFormValid() ? '✨ Publish Portfolio' : '🔒 Complete Required Fields'}
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
                 onClick={handleReset}
-                className="flex-1 bg-gray-100 text-gray-700 py-4 px-8 rounded-xl font-bold text-lg hover:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200"
+                className="cursor-pointer bg-purple-600 hover:bg-purple-700"
               >
                 Reset Form
-              </button>
+              </Button>
             </div>
           </form>
-        </div>
+       </div>
 
         {/* Info Footer */}
         <div className="mt-8 text-center space-y-2">

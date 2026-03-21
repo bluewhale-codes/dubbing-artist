@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { FileAudio, Type, Layers, Upload, CheckCircle, X, Play } from 'lucide-react';
+import { FileAudio, Type, Layers, Upload, CheckCircle, X, Play , Mic } from 'lucide-react';
+import { Input } from '../../../components/ui/input';
+import {Select,SelectTrigger,SelectItem,SelectContent, SelectLabel, SelectGroup,SelectValue} from "../../../components/ui/select"
 
 export default function VoiceEditForm() {
   const [formData, setFormData] = useState({
@@ -194,15 +196,15 @@ export default function VoiceEditForm() {
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Type className="h-5 w-5 text-gray-400" />
                 </div>
-                <input
+                <Input
                   id="title"
                   name="title"
                   type="text"
                   value={formData.title}
                   onChange={handleInputChange}
-                  className={`block w-full pl-10 pr-3 py-3 border ${
+                  className={` ${
                     errors.title ? 'border-red-500' : 'border-gray-300'
-                  } rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 placeholder-gray-400`}
+                  } `}
                   placeholder="Enter project title"
                 />
               </div>
@@ -226,7 +228,7 @@ export default function VoiceEditForm() {
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Layers className="h-5 w-5 text-gray-400" />
                 </div>
-                <select
+                {/* <select
                   id="audioType"
                   name="audioType"
                   value={formData.audioType}
@@ -241,7 +243,37 @@ export default function VoiceEditForm() {
                       {type}
                     </option>
                   ))}
-                </select>
+                </select> */}
+                {/* Custom select */}
+                <div>
+                  <Select id="audioType"
+                  name="audioType"
+                  onChange={handleInputChange}
+                  className={`${
+                    errors.audioType ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                    >
+                           <SelectTrigger>
+                                 <div className='flex'>
+                                    
+                                  <Mic className="h-5 w-5 text-gray-400" />
+                  
+                                  <SelectValue placeholder="Select Audio type" />
+                                 </div>
+                           </SelectTrigger>
+                           <SelectContent>
+                                  <SelectGroup>
+                                     <SelectLabel>--Choose--</SelectLabel>
+                                    {audioTypes.map((type) => (
+                                      <SelectItem key={type} value={type}>
+                                        {type}
+                                      </SelectItem>
+                                    ))} 
+                                  </SelectGroup>
+                                
+                           </SelectContent>
+                       </Select>
+                </div>
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                   <svg
                     className="h-5 w-5 text-gray-400"

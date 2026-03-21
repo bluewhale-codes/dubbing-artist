@@ -5,8 +5,8 @@ import { Dialog, DialogContent, DialogDescription,DialogHeader, DialogTitle } fr
 const FormDialog = ({onClose,Comp}) => {
   return (
      <>
-       <Dialog open={true} onOpenChange={onClose} >
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+       <Dialog className="" open={true} onOpenChange={onClose} >
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
        
              
              {/* Profile Form */}

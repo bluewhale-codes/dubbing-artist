@@ -1,19 +1,41 @@
 import { User, Award, Target, Zap , SquarePen } from 'lucide-react';
 import { Button } from '../../../components/ui/Button';
+import  FormDialog from '../Forms/FormDialog';
+import { useState } from 'react';
+import AboutForm from '../Forms/AboutForm';
 export function AboutSection() {
+
+  const [open,setOpen] = useState(false);
+
+  const Toggleform = ()=>{
+       setOpen(!open);
+       
+  }
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-100">
         <div className="flex items-center gap-3 mb-6">
           <User className="w-6 h-6 text-purple-600" />
           <h2 className="text-2xl font-bold text-gray-900">About the Artist</h2>
-           <Button
+        <Button
+           onClick={()=>Toggleform()}
+           variant="outline"
+           className="cursor-pointer border-2 border-purple-600 text-purple-600 hover:bg-purple-50 rounded-lg py-3 transition-all"
+          >
+            <SquarePen/>
+            Edit
+        </Button>
+        {open && <FormDialog Comp={AboutForm} onClose={Toggleform}/>}
+        
+           {/* <Button
+           onclick={()=>alert("Hello world")}
            variant="outline"
            className="cursor-pointer border-2 border-purple-600 text-purple-600 hover:bg-purple-50 rounded-lg py-3 transition-all"
           >
            <SquarePen/>
             Edit
-        </Button>
+        </Button>  */}
+        
         </div>
         
         <div className="prose max-w-none">

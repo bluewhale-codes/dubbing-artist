@@ -10,11 +10,13 @@ import CreateJob from "./pages/Jobs/CreateJob"
 import JobLists from "./pages/Jobs/JobLists"
 import ProfilePage from './pages/Profile/ProfilePage'
 import ClientProposal from './pages/Profile/ClientProposal'
+import Test from './testing/Test'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <>
       <Route path='/' element={<MainLayout/>}>
               <Route index element={<Home/>}/>
+              <Route path='test/' element={<Test/>}/>
               <Route path='marketplace/' element={<ArtistsList/>}/>
               <Route path='profile/' element={<ProfilePage/>}/>
               <Route path='createProject/' element={<CreateJob/>}/>
