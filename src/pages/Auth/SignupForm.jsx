@@ -119,9 +119,7 @@ const SignupForm = ({ onToggleForm }) => {
     
     setIsLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Google signup initiated for role:', formData.role);
-      alert(`Google OAuth signup would be initiated for ${formData.role}`);
+       window.location.href = "http://localhost:3000/auth/google"
     } finally {
       setIsLoading(false);
     }

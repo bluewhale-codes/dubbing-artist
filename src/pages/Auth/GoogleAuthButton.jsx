@@ -38,6 +38,7 @@ const GoogleAuthButton = ({ onClick, isLoading }) => {
       alert('Google OAuth integration would happen here. In production, this would redirect to Google sign-in.');
     }
   };
+  
 
   return (
     <button

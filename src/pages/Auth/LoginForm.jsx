@@ -90,9 +90,7 @@ const LoginForm = ({ onToggleForm }) => {
   const handleGoogleAuth = async () => {
     setIsLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Google authentication initiated');
-      alert('Google OAuth would be initiated here');
+        window.location.href = "http://localhost:3000/auth/google"
     } finally {
       setIsLoading(false);
     }

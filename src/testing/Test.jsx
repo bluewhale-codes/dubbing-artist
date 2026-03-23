@@ -2,28 +2,22 @@ import React from 'react'
 import { Select , SelectContent, SelectTrigger,SelectLabel, SelectItem,SelectValue,SelectGroup } from '../components/ui/select'
 
 const Test = () => {
+
+   const login = async ()=>{
+      
+         window.location.href = "http://localhost:3000/auth/google"
+          
+       
+
+      }
   return (
    <div className='h-[400px]'>
-       <Select>
-        {/* Trigger (button) */}
-        <SelectTrigger>
-          <SelectValue placeholder="Select a fruit" />
-        </SelectTrigger>
-
-        {/* Dropdown Content */}
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Fruits</SelectLabel>
-
-            <SelectItem value="apple">🍎 Apple</SelectItem>
-            <SelectItem value="banana">🍌 Banana</SelectItem>
-            <SelectItem value="orange">🍊 Orange</SelectItem>
-            <SelectItem value="mango">🥭 Mango</SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+        <button className='cursor-pointer' onClick={login}>
+             Google login
+        </button>
    </div>
   )
+
 }
 
 export default Test
