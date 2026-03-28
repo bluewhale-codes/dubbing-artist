@@ -1,5 +1,3 @@
-import React from 'react'
-import { Select , SelectContent, SelectTrigger,SelectLabel, SelectItem,SelectValue,SelectGroup } from '../components/ui/select'
 
 const Test = () => {
 
@@ -15,6 +13,8 @@ const Test = () => {
         <button className='cursor-pointer' onClick={login}>
              Google login
         </button>
+
+     
    </div>
   )
 

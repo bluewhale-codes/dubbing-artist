@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, User, Loader2, Mic, Briefcase } from 'lucide-react';
 import GoogleAuthButton from './GoogleAuthButton';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerUser } from '../../store/actions';
 
 const SignupForm = ({ onToggleForm }) => {
+  const {loading,success} = useSelector((state)=>state.userAuthReducer);
+
+  const dispatch = useDispatch();
+
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     password: '',
-    confirmPassword: '',
     role: '' // 'client' or 'artist'
   });
   
@@ -82,33 +87,22 @@ const SignupForm = ({ onToggleForm }) => {
       return;
     }
     
-    // Placeholder signup logic
-    setIsLoading(true);
-    
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      console.log('Signup attempt:', {
-        fullName: formData.fullName,
-        email: formData.email,
-        role: formData.role
-      });
-      
-      // In production, you would call your authentication API here:
-      // const response = await fetch('/api/auth/signup', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(formData)
-      // });
-      
-      alert(`Account created successfully as ${formData.role}! (This is a demo)`);
-      
-    } catch (error) {
-      setErrors({ general: 'Registration failed. Please try again.' });
-    } finally {
-      setIsLoading(false);
+    const body = {
+      name:formData.fullName,
+      email:formData.email,
+      password:formData.password,
+      role:formData.role,
     }
+  
+    console.log(body);
+
+    
+    
+    dispatch(registerUser(body));
+    
+    
+
+     
   };
 
   const handleGoogleAuth = async () => {
@@ -148,12 +142,12 @@ const SignupForm = ({ onToggleForm }) => {
             <button
               type="button"
               onClick={() => handleRoleSelect('client')}
-              disabled={isLoading}
+              disabled={loading}
               className={`p-4 border-2 rounded-lg transition-all duration-200 ${
                 formData.role === 'client'
                   ? 'border-blue-500 bg-blue-50 shadow-md'
                   : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
-              } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <div className="flex flex-col items-center gap-2">
                 <Briefcase className={`h-6 w-6 ${formData.role === 'client' ? 'text-blue-600' : 'text-gray-600'}`} />
@@ -167,12 +161,12 @@ const SignupForm = ({ onToggleForm }) => {
             <button
               type="button"
               onClick={() => handleRoleSelect('artist')}
-              disabled={isLoading}
+              disabled={loading}
               className={`p-4 border-2 rounded-lg transition-all duration-200 ${
                 formData.role === 'artist'
                   ? 'border-blue-500 bg-blue-50 shadow-md'
                   : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
-              } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <div className="flex flex-col items-center gap-2">
                 <Mic className={`h-6 w-6 ${formData.role === 'artist' ? 'text-blue-600' : 'text-gray-600'}`} />
@@ -207,7 +201,7 @@ const SignupForm = ({ onToggleForm }) => {
                 errors.fullName ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
               } rounded-lg focus:outline-none focus:ring-2 transition-all`}
               placeholder="John Doe"
-              disabled={isLoading}
+              disabled={loading}
             />
           </div>
           {errors.fullName && (
@@ -234,7 +228,7 @@ const SignupForm = ({ onToggleForm }) => {
                 errors.email ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
               } rounded-lg focus:outline-none focus:ring-2 transition-all`}
               placeholder="you@example.com"
-              disabled={isLoading}
+              disabled={loading}
             />
           </div>
           {errors.email && (
@@ -261,13 +255,13 @@ const SignupForm = ({ onToggleForm }) => {
                 errors.password ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
               } rounded-lg focus:outline-none focus:ring-2 transition-all`}
               placeholder="Create a strong password"
-              disabled={isLoading}
+              disabled={loading}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute inset-y-0 right-0 pr-3 flex items-center"
-              disabled={isLoading}
+              disabled={loading}
             >
               {showPassword ? (
                 <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
@@ -300,13 +294,13 @@ const SignupForm = ({ onToggleForm }) => {
                 errors.confirmPassword ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
               } rounded-lg focus:outline-none focus:ring-2 transition-all`}
               placeholder="Confirm your password"
-              disabled={isLoading}
+              disabled={loading}
             />
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               className="absolute inset-y-0 right-0 pr-3 flex items-center"
-              disabled={isLoading}
+              disabled={loading}
             >
               {showConfirmPassword ? (
                 <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
@@ -323,10 +317,10 @@ const SignupForm = ({ onToggleForm }) => {
         {/* Create Account Button */}
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={loading}
           className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
-          {isLoading ? (
+          {loading ? (
             <>
               <Loader2 className="h-5 w-5 animate-spin" />
               <span>Creating account...</span>

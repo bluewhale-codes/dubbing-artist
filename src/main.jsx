@@ -11,6 +11,8 @@ import JobLists from "./pages/Jobs/JobLists"
 import ProfilePage from './pages/Profile/ProfilePage'
 import ClientProposal from './pages/Profile/ClientProposal'
 import Test from './testing/Test'
+import { Provider } from 'react-redux'
+import store from './store/store'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <>
@@ -30,5 +32,8 @@ const router = createBrowserRouter(createRoutesFromElements(
 ))
 
 createRoot(document.getElementById('root')).render(
-   <RouterProvider router={router}/>
+  <Provider store={store}>
+
+    <RouterProvider router={router}/>
+  </Provider>
 )

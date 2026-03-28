@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
 import GoogleAuthButton from './GoogleAuthButton';
+import { useSelector,useDispatch } from 'react-redux';
+import { loginUser } from '../../store/actions';
+import { useNavigate } from 'react-router';
+
 
 const LoginForm = ({ onToggleForm }) => {
   const [formData, setFormData] = useState({
@@ -12,6 +16,11 @@ const LoginForm = ({ onToggleForm }) => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  
+  const navigate = useNavigate();
+
+  const {loading,success} = useSelector((state)=>state.userAuthReducer);
+  const dispatch = useDispatch();
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -54,33 +63,16 @@ const LoginForm = ({ onToggleForm }) => {
       return;
     }
     
-    // Placeholder login logic
-    setIsLoading(true);
-    
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      console.log('Login attempt:', {
-        email: formData.email,
-        password: formData.password,
-        rememberMe: formData.rememberMe
-      });
-      
-      // In production, you would call your authentication API here:
-      // const response = await fetch('/api/auth/login', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ email: formData.email, password: formData.password })
-      // });
-      
-      alert('Login successful! (This is a demo)');
-      
-    } catch (error) {
-      setErrors({ general: 'Authentication failed. Please try again.' });
-    } finally {
-      setIsLoading(false);
+    const cred = {
+       email:formData.email,
+       password:formData.password
     }
+    dispatch(loginUser(cred));
+    if(success){
+      navigate("/profile")
+    }
+    
+    
   };
 
   const handleForgotPassword = () => {
@@ -156,13 +148,13 @@ const LoginForm = ({ onToggleForm }) => {
                 errors.password ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
               } rounded-lg focus:outline-none focus:ring-2 transition-all`}
               placeholder="Enter your password"
-              disabled={isLoading}
+              disabled={loading}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute inset-y-0 right-0 pr-3 flex items-center"
-              disabled={isLoading}
+              disabled={loading}
             >
               {showPassword ? (
                 <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
@@ -186,7 +178,7 @@ const LoginForm = ({ onToggleForm }) => {
               checked={formData.rememberMe}
               onChange={handleInputChange}
               className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-              disabled={isLoading}
+              disabled={loading}
             />
             <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-700">
               Remember me
@@ -196,7 +188,7 @@ const LoginForm = ({ onToggleForm }) => {
             type="button"
             onClick={handleForgotPassword}
             className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
-            disabled={isLoading}
+            disabled={loading}
           >
             Forgot password?
           </button>
@@ -205,10 +197,10 @@ const LoginForm = ({ onToggleForm }) => {
         {/* Login Button */}
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={loading}
           className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
-          {isLoading ? (
+          {loading ? (
             <>
               <Loader2 className="h-5 w-5 animate-spin" />
               <span>Signing in...</span>
@@ -229,7 +221,7 @@ const LoginForm = ({ onToggleForm }) => {
         </div>
 
         {/* Google Auth Button */}
-        <GoogleAuthButton onClick={handleGoogleAuth} isLoading={isLoading} />
+        <GoogleAuthButton onClick={handleGoogleAuth} isLoading={loading} />
       </form>
 
       {/* Toggle to Sign Up */}
@@ -240,7 +232,7 @@ const LoginForm = ({ onToggleForm }) => {
             type="button"
             onClick={onToggleForm}
             className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
-            disabled={isLoading}
+            disabled={loading}
           >
             Sign up
           </button>
