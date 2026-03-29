@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
 import GoogleAuthButton from './GoogleAuthButton';
 import { useSelector,useDispatch } from 'react-redux';
 import { loginUser } from '../../store/actions';
 import { useNavigate } from 'react-router';
+import { Input } from '../../components/ui/input';
+
+import { Toaster,toast } from 'sonner';
 
 
 const LoginForm = ({ onToggleForm }) => {
@@ -12,20 +15,28 @@ const LoginForm = ({ onToggleForm }) => {
     password: '',
     rememberMe: false
   });
+
+  
   
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  
   
   const navigate = useNavigate();
 
-  const {loading,success} = useSelector((state)=>state.userAuthReducer);
+  const {loading,success,error} = useSelector((state)=>state.userAuthReducer);
   const dispatch = useDispatch();
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+ 
+   
+  
+  
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -67,10 +78,31 @@ const LoginForm = ({ onToggleForm }) => {
        email:formData.email,
        password:formData.password
     }
-    dispatch(loginUser(cred));
-    if(success){
-      navigate("/profile")
-    }
+
+
+
+    // try {
+    //    const res = await fetch("http://localhost:3000/api/login",{
+    //   method:"POST",
+    //   body:JSON.stringify(cred),
+    //   credentials:"include",
+    //   headers:{"Content-Type":"application/json"}
+    // })
+
+    // const data = await res.json();
+    // if(!res.ok){
+    //   throw new Error(data.message)
+    // }else{
+
+    //   console.log(data);
+    // }
+    // } catch (error) {
+    //    console.log(error.message);
+    // }
+     dispatch(loginUser(cred));
+     if(success){
+       navigate("/profile");
+     }
     
     
   };
@@ -90,14 +122,15 @@ const LoginForm = ({ onToggleForm }) => {
 
   return (
     <div className="w-full">
+      <Toaster position="top-center" richColors />
       <div className="mb-8">
         <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome back</h2>
         <p className="text-gray-600">Sign in to your account to continue</p>
       </div>
 
-      {errors.general && (
+      {error && (
         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-          {errors.general}
+          {error.message}
         </div>
       )}
 
@@ -111,13 +144,13 @@ const LoginForm = ({ onToggleForm }) => {
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Mail className="h-5 w-5 text-gray-400" />
             </div>
-            <input
+            <Input
               type="email"
               id="email"
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className={`w-full pl-10 pr-4 py-3 border ${
+              className={` ${
                 errors.email ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
               } rounded-lg focus:outline-none focus:ring-2 transition-all`}
               placeholder="you@example.com"
@@ -138,13 +171,13 @@ const LoginForm = ({ onToggleForm }) => {
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Lock className="h-5 w-5 text-gray-400" />
             </div>
-            <input
+            <Input
               type={showPassword ? 'text' : 'password'}
               id="password"
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className={`w-full pl-10 pr-12 py-3 border ${
+              className={`${
                 errors.password ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
               } rounded-lg focus:outline-none focus:ring-2 transition-all`}
               placeholder="Enter your password"

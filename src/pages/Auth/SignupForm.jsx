@@ -3,6 +3,7 @@ import { Mail, Lock, Eye, EyeOff, User, Loader2, Mic, Briefcase } from 'lucide-r
 import GoogleAuthButton from './GoogleAuthButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../../store/actions';
+import { Input } from '../../components/ui/input';
 
 const SignupForm = ({ onToggleForm }) => {
   const {loading,success} = useSelector((state)=>state.userAuthReducer);
@@ -143,7 +144,7 @@ const SignupForm = ({ onToggleForm }) => {
               type="button"
               onClick={() => handleRoleSelect('client')}
               disabled={loading}
-              className={`p-4 border-2 rounded-lg transition-all duration-200 ${
+              className={`p-2 border-2 rounded-lg transition-all duration-200 ${
                 formData.role === 'client'
                   ? 'border-blue-500 bg-blue-50 shadow-md'
                   : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
@@ -191,13 +192,13 @@ const SignupForm = ({ onToggleForm }) => {
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <User className="h-5 w-5 text-gray-400" />
             </div>
-            <input
+            <Input
               type="text"
               id="fullName"
               name="fullName"
               value={formData.fullName}
               onChange={handleInputChange}
-              className={`w-full pl-10 pr-4 py-3 border ${
+              className={`${
                 errors.fullName ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
               } rounded-lg focus:outline-none focus:ring-2 transition-all`}
               placeholder="John Doe"
@@ -218,13 +219,13 @@ const SignupForm = ({ onToggleForm }) => {
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Mail className="h-5 w-5 text-gray-400" />
             </div>
-            <input
+            <Input
               type="email"
               id="email"
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className={`w-full pl-10 pr-4 py-3 border ${
+              className={`${
                 errors.email ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
               } rounded-lg focus:outline-none focus:ring-2 transition-all`}
               placeholder="you@example.com"
@@ -245,13 +246,13 @@ const SignupForm = ({ onToggleForm }) => {
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Lock className="h-5 w-5 text-gray-400" />
             </div>
-            <input
+            <Input
               type={showPassword ? 'text' : 'password'}
               id="password"
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className={`w-full pl-10 pr-12 py-3 border ${
+              className={`${
                 errors.password ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
               } rounded-lg focus:outline-none focus:ring-2 transition-all`}
               placeholder="Create a strong password"
@@ -284,13 +285,13 @@ const SignupForm = ({ onToggleForm }) => {
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Lock className="h-5 w-5 text-gray-400" />
             </div>
-            <input
+            <Input
               type={showConfirmPassword ? 'text' : 'password'}
               id="confirmPassword"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleInputChange}
-              className={`w-full pl-10 pr-12 py-3 border ${
+              className={`${
                 errors.confirmPassword ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
               } rounded-lg focus:outline-none focus:ring-2 transition-all`}
               placeholder="Confirm your password"

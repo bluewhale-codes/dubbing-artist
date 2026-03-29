@@ -17,15 +17,21 @@ export const registerUser = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
     'user/login',
-    async(userCredential,thunkAPI)=>{
-        const link = "http://localhost:3000/api/login"
-        const config = {
-            withCredentials:true,
-            headers:{
-                "Content-Type":"application/json"
+    async(userCredential,{rejectWithValue})=>{
+        try {
+            const link = "http://localhost:3000/api/login"
+            const config = {
+                withCredentials:true,
+                headers:{
+                    "Content-Type":"application/json"
+                }
             }
+            const res = await axios.post(link,userCredential,config);
+            return res.data;
+        } catch (error) {
+             return rejectWithValue(
+                error.response?.data || "some thing went wrong"
+              );
         }
-        const res = await axios.post(link,userCredential,config);
-        return res.data;
     }
 )
