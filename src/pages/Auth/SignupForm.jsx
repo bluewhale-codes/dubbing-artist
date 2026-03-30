@@ -6,7 +6,7 @@ import { registerUser } from '../../store/actions';
 import { Input } from '../../components/ui/input';
 
 const SignupForm = ({ onToggleForm }) => {
-  const {loading,success} = useSelector((state)=>state.userAuthReducer);
+  const {loading,success,error} = useSelector((state)=>state.userAuthReducer);
 
   const dispatch = useDispatch();
 
@@ -127,9 +127,9 @@ const SignupForm = ({ onToggleForm }) => {
         <p className="text-gray-600">Join our platform and get started today</p>
       </div>
 
-      {errors.general && (
+      {error && (
         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-          {errors.general}
+          {error.message}
         </div>
       )}
 

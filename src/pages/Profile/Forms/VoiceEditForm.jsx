@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { FileAudio, Type, Layers, Upload, CheckCircle, X, Play , Mic } from 'lucide-react';
 import { Input } from '../../../components/ui/input';
+import { registerAudio } from '../../../store/actions';
+import { useDispatch } from 'react-redux';
 import {Select,SelectTrigger,SelectItem,SelectContent, SelectLabel, SelectGroup,SelectValue} from "../../../components/ui/select"
 
 export default function VoiceEditForm() {
@@ -9,11 +11,14 @@ export default function VoiceEditForm() {
     audioType: '',
     audioFile: null,
   });
+  const dispatch = useDispatch();
 
   const [audioFileName, setAudioFileName] = useState('');
   const [audioPreviewUrl, setAudioPreviewUrl] = useState(null);
+  const [audioType,setAudioType] = useState();
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+
 
   const audioTypes = [
     'Narration',
@@ -23,8 +28,14 @@ export default function VoiceEditForm() {
     'Advertisement',
   ];
 
+
+
   // Handle text input changes
   const handleInputChange = (e) => {
+    if(e.target.name=="audioType"){
+        setAudioType(e.target.value);
+        setFormData({"audioType":audioType})
+    }
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -45,11 +56,11 @@ export default function VoiceEditForm() {
     const file = e.target.files?.[0];
     if (file) {
       // Validate file type
-      const validAudioTypes = ['audio/mpeg', 'audio/wav', 'audio/mp3', 'audio/ogg'];
+      const validAudioTypes = ["video/mp4","video/webm","video/ogg","video/quicktime"];
       if (!validAudioTypes.includes(file.type)) {
         setErrors({
           ...errors,
-          audioFile: 'Please upload a valid audio file (MP3, WAV, OGG)',
+          audioFile: 'Please upload a valid video file (MP4)',
         });
         return;
       }
@@ -114,17 +125,35 @@ export default function VoiceEditForm() {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    const mydata = new FormData();
+    mydata.append("title",formData.title);
+    mydata.append("audioType",formData.audioType);
+    mydata.append("video",formData.audioFile);
     e.preventDefault();
 
     if (validateForm()) {
-      console.log('Form submitted successfully:', {
-        title: formData.title,
-        audioType: formData.audioType,
-        audioFile: formData.audioFile,
-        fileName: audioFileName,
-      });
-      
+       try {
+             console.log("upload start")
+            const res = await fetch("http://localhost:3000/profile/upload-video",{
+              method:'POST',
+              body:mydata
+            })
+
+             const data = await res.json();
+             if(!res.ok){
+                throw new Error(data.message || "Upload Failed");
+             }
+              
+             console.log(data);
+               setIsSubmitted(true);
+       } catch (error) {
+         console.error(error);
+       }
+       
+
+
+
       setIsSubmitted(true);
       
       // Reset success message after 3 seconds
@@ -202,7 +231,7 @@ export default function VoiceEditForm() {
                   type="text"
                   value={formData.title}
                   onChange={handleInputChange}
-                  className={` ${
+                  className={`${
                     errors.title ? 'border-red-500' : 'border-gray-300'
                   } `}
                   placeholder="Enter project title"
@@ -228,7 +257,7 @@ export default function VoiceEditForm() {
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Layers className="h-5 w-5 text-gray-400" />
                 </div>
-                {/* <select
+              <select
                   id="audioType"
                   name="audioType"
                   value={formData.audioType}
@@ -243,12 +272,13 @@ export default function VoiceEditForm() {
                       {type}
                     </option>
                   ))}
-                </select> */}
+                </select>
                 {/* Custom select */}
                 <div>
-                  <Select id="audioType"
+                  {/* <Select id="audioType"
                   name="audioType"
                   onChange={handleInputChange}
+                  value={audioType}
                   className={`${
                     errors.audioType ? 'border-red-500' : 'border-gray-300'
                   }`}
@@ -272,7 +302,7 @@ export default function VoiceEditForm() {
                                   </SelectGroup>
                                 
                            </SelectContent>
-                       </Select>
+                       </Select> */}
                 </div>
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                   <svg
@@ -314,7 +344,7 @@ export default function VoiceEditForm() {
                 <input
                   id="audioFile"
                   type="file"
-                  accept="audio/*,.mp3,.wav,.ogg"
+                  accept="video/*"
                   onChange={handleFileUpload}
                   className="hidden"
                 />
@@ -362,7 +392,7 @@ export default function VoiceEditForm() {
               )}
 
               {/* Audio Preview Player */}
-              {audioPreviewUrl && (
+              {/* {audioPreviewUrl && (
                 <div className="mt-4 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-200">
                   <p className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
                     <Play className="w-4 h-4 text-indigo-600" />
@@ -377,6 +407,11 @@ export default function VoiceEditForm() {
                     Your browser does not support the audio element.
                   </audio>
                 </div>
+              )} */}
+              {audioPreviewUrl && (
+                 <video width="400" controls>
+          <source src={audioPreviewUrl} type="video/mp4" />
+        </video>
               )}
             </div>
 
@@ -384,7 +419,7 @@ export default function VoiceEditForm() {
             <div className="flex flex-col sm:flex-row gap-4 pt-6">
               <button
                 type="submit"
-                disabled={!isFormValid()}
+             
                 className={`flex-1 py-3 px-6 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform transition-all duration-200 shadow-lg ${
                   isFormValid()
                     ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 hover:scale-[1.02] hover:shadow-xl'
