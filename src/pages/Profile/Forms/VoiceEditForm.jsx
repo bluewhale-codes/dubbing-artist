@@ -133,24 +133,7 @@ export default function VoiceEditForm() {
     e.preventDefault();
 
     if (validateForm()) {
-       try {
-             console.log("upload start")
-            const res = await fetch("http://localhost:3000/profile/upload-video",{
-              method:'POST',
-              body:mydata
-            })
-
-             const data = await res.json();
-             if(!res.ok){
-                throw new Error(data.message || "Upload Failed");
-             }
-              
-             console.log(data);
-               setIsSubmitted(true);
-       } catch (error) {
-         console.error(error);
-       }
-       
+       dispatch(registerAudio(mydata));
 
 
 
@@ -445,7 +428,7 @@ export default function VoiceEditForm() {
             Fields marked with <span className="text-red-500">*</span> are required
           </p>
           <p className="text-xs text-gray-500 mt-2">
-            Supported formats: MP3, WAV, OGG
+            Supported formats: MP4
           </p>
         </div>
       </div>

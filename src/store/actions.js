@@ -57,3 +57,18 @@ export const registerAudio = createAsyncThunk(
         }
     }
 )
+
+export const registerPortfolio = createAsyncThunk(
+     'profile/porfolio',
+     async(formdata,{rejectWithValue})=>{
+        try {
+            const link = "http://localhost:3000/profile/uploadPortfolio-work";
+            const res = await axios.post(link,formdata,{withCredentials:true});
+            return res.data;
+        } catch (error) {
+            return rejectWithValue(
+                error.response?.data || "some thing went wrong"
+            );
+        }
+     }
+)

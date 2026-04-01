@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import {
   FileAudio,
   Type,
@@ -21,6 +22,10 @@ import { Input } from '../../../components/ui/input';
 import { Textarea } from '../../../components/ui/textarea';
 import {Select,SelectTrigger,SelectItem,SelectContent, SelectLabel, SelectGroup,SelectValue} from "../../../components/ui/select"
 import { Button } from '../../../components/ui/Button';
+import { registerPortfolio } from '../../../store/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import Notification from '../notificationBtns/Notification';
+import axios from 'axios';
 
 export default function PortfolioUploadForm() {
   const [formData, setFormData] = useState({
@@ -38,7 +43,8 @@ export default function PortfolioUploadForm() {
     completionDate: '',
     thumbnail: null,
   });
-
+  const dispatch = useDispatch();
+  const {loading,error} = useSelector((state)=>state.profileSlice)
   const [languageInput, setLanguageInput] = useState('');
   const [voiceStyleInput, setVoiceStyleInput] = useState('');
   const [audioFileName, setAudioFileName] = useState('');
@@ -99,7 +105,7 @@ export default function PortfolioUploadForm() {
     const file = e.target.files?.[0];
     if (file) {
       // Validate file type
-      const validAudioTypes = ['audio/mpeg', 'audio/wav', 'audio/mp3'];
+      const validAudioTypes = ["video/mp4","video/webm","video/ogg","video/quicktime"];
       if (!validAudioTypes.includes(file.type)) {
         setErrors({
           ...errors,
@@ -334,12 +340,52 @@ export default function PortfolioUploadForm() {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log("Form submitted")
     if (validateForm()) {
-      console.log('Portfolio submitted successfully:', formData);
+     
+        const data = new FormData();
+
+        Object.keys(formData).forEach((key) => {
+
+          if(key=="languages"){
+            data.append(key,JSON.stringify(formData[key]));
+          }else if(key=="voiceStyles"){
+            data.append(key,JSON.stringify(formData[key]));
+          }else if(key=="audioFile"){
+             data.append("video",formData[key])
+          }
+          else{
+            data.append(key, formData[key]);
+          }
+        });
+
+        console.log(data);
+
+
+        // const mydata  = new FormData();
+        // mydata.append("video",formData["audioFile"]);
+        // mydata.append("languages",formData["languages"]);
+        // mydata.append("thumbnail",formData["thumbnail"])
+        // const config = {
+        //     headers:{
+                 
+        //     }
+        // }
+        //   try {
+              
+        //       const res  = await axios.post("http://localhost:3000/profile/uploadPortfolio-work",data,{withCredentials:true});
+        //       console.log(res.data);
+        //   } catch (error) {
+        //       console.log(error.response.data);
+        //   }
+
       setIsSubmitted(true);
+    
+      dispatch(registerPortfolio(data));
+      
+      
 
       setTimeout(() => {
         setIsSubmitted(false);
@@ -379,9 +425,17 @@ export default function PortfolioUploadForm() {
     });
   };
 
+
   return (
-    <div className="min-h-screen  py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen relative   py-12 px-4 sm:px-6 lg:px-8">
+      <div className='mb-10'>
+       
+      </div>
+       
+
       <div className="max-w-4xl mx-auto">
+        
+        
         
         {/* <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
@@ -409,6 +463,7 @@ export default function PortfolioUploadForm() {
 
         {/* Form Card */}
        <div>
+        
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Section 1: Basic Project Info */}
             <div className="space-y-6">
@@ -447,6 +502,7 @@ export default function PortfolioUploadForm() {
                   <Input
                     id="title"
                     type="text"
+                    name="title"
                     className={`block w-full pl-10 pr-3 py-3 border ${
                       errors.title ? 'border-red-500' : 'border-gray-300'
                     } rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-all duration-200`}
@@ -548,7 +604,7 @@ export default function PortfolioUploadForm() {
                   <input
                     id="audioFile"
                     type="file"
-                    accept="audio/*,.mp3,.wav"
+                    accept="video/*"
                     onChange={handleAudioUpload}
                     className="hidden"
                   />
@@ -601,7 +657,7 @@ export default function PortfolioUploadForm() {
                 )}
 
                 {/* Audio Preview */}
-                {audioPreviewUrl && (
+                {/* {audioPreviewUrl && (
                   <div className="mt-4 p-4 bg-gradient-to-r from-violet-50 to-fuchsia-50 rounded-xl border-2 border-violet-200">
                     <p className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
                       <Play className="w-4 h-4 text-violet-600" />
@@ -616,7 +672,10 @@ export default function PortfolioUploadForm() {
                       Your browser does not support the audio element.
                     </audio>
                   </div>
-                )}
+                )} */}
+                {audioPreviewUrl && (<video width="400" controls>
+          <source src={audioPreviewUrl} type="video/mp4" />
+        </video>)}
               </div>
             </div>
 
@@ -640,10 +699,10 @@ export default function PortfolioUploadForm() {
                   Voice Category <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  {/* <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Mic className="h-5 w-5 text-gray-400" />
-                  </div> */}
-                  {/* <select
+                  </div> 
+                  <select
                     id="voiceCategory"
                     name="voiceCategory"
                     value={formData.voiceCategory}
@@ -658,8 +717,8 @@ export default function PortfolioUploadForm() {
                         {category}
                       </option>
                     ))}
-                  </select> */}
-                  {/* <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                  </select> 
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     <svg
                       className="h-5 w-5 text-gray-400"
                       xmlns="http://www.w3.org/2000/svg"
@@ -672,7 +731,7 @@ export default function PortfolioUploadForm() {
                         clipRule="evenodd"
                       />
                     </svg>
-                  </div> */}
+                  </div> 
                 </div>
                 {errors.voiceCategory && (
                   <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
@@ -680,7 +739,7 @@ export default function PortfolioUploadForm() {
                     {errors.voiceCategory}
                   </p>
                 )}
-                  <Select id="voiceCategory"
+                  {/* <Select id="voiceCategory"
                     name="voiceCategory"
                     
                     onChange={handleInputChange}
@@ -704,7 +763,7 @@ export default function PortfolioUploadForm() {
                                   </SelectGroup>
                                 
                            </SelectContent>
-                       </Select>
+                       </Select> */}
               </div>
 
               {/* Languages */}

@@ -1,8 +1,11 @@
 import React from 'react'
 import ProfileSummaryForm from './ProfileSummaryForm'
 import { Dialog, DialogContent, DialogDescription,DialogHeader, DialogTitle } from "../../../components/ui/dialog";
-
+import { useSelector } from 'react-redux';
+import Notification from '../notificationBtns/Notification';
 const FormDialog = ({onClose,Comp}) => {
+
+  const {notification}=useSelector((state)=>state.profileSlice);
   return (
      <>
        <Dialog className="" open={true} onOpenChange={onClose} >
@@ -11,7 +14,8 @@ const FormDialog = ({onClose,Comp}) => {
              
              {/* Profile Form */}
              <div>
-                 <Comp/>
+                 {notification ? <Notification error={error} type="error"/> : <Comp/>}
+                 
              </div>
 
         

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { DollarSign ,Calendar, FileText,CheckCircle,MessageCircle,XCircle} from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../../../components/ui/dialog";
-import { Button } from "../../../components/ui/Button";
 
+import { useSelector } from "react-redux";
 export default function ProposalDetail({ proposal, onClose }) {
   
+
+
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -16,6 +18,7 @@ export default function ProposalDetail({ proposal, onClose }) {
         </DialogHeader>
 
             <div>
+              
                {/* Client Details */}
                 <div className="px-6 py-4 bg-blue-50/50 border-y border-blue-100">
                     <div className="flex items-center gap-3">
