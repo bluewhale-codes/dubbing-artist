@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogDescription,DialogHeader, DialogTitle } fr
 import { useSelector } from 'react-redux';
 import Notification from '../notificationBtns/Notification';
 const FormDialog = ({onClose,Comp}) => {
-
+   
   const {notification}=useSelector((state)=>state.profileSlice);
   return (
      <>
@@ -14,7 +14,7 @@ const FormDialog = ({onClose,Comp}) => {
              
              {/* Profile Form */}
              <div>
-                 {notification ? <Notification error={error} type="error"/> : <Comp/>}
+                  <Comp/>
                  
              </div>
 

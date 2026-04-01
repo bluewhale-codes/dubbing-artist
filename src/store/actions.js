@@ -48,7 +48,7 @@ export const registerAudio = createAsyncThunk(
         try {
             const link = "http://localhost:3000/profile/upload-video"
             
-            const res = await axios.post(link,formdata);
+            const res = await axios.post(link,formdata,{withCredentials:true});
             return res.data;
         } catch (error) {
              return rejectWithValue(
@@ -63,6 +63,21 @@ export const registerPortfolio = createAsyncThunk(
      async(formdata,{rejectWithValue})=>{
         try {
             const link = "http://localhost:3000/profile/uploadPortfolio-work";
+            const res = await axios.post(link,formdata,{withCredentials:true});
+            return res.data;
+        } catch (error) {
+            return rejectWithValue(
+                error.response?.data || "some thing went wrong"
+            );
+        }
+     }
+)
+
+export const registerUserdetail = createAsyncThunk(
+     'profile/detail',
+     async(formdata,{rejectWithValue})=>{
+        try {
+            const link = "http://localhost:3000/profile/createUserProfile";
             const res = await axios.post(link,formdata,{withCredentials:true});
             return res.data;
         } catch (error) {

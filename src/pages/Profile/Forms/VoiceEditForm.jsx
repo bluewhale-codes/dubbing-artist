@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FileAudio, Type, Layers, Upload, CheckCircle, X, Play , Mic } from 'lucide-react';
 import { Input } from '../../../components/ui/input';
 import { registerAudio } from '../../../store/actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {Select,SelectTrigger,SelectItem,SelectContent, SelectLabel, SelectGroup,SelectValue} from "../../../components/ui/select"
-
+import Notification from '../notificationBtns/Notification';
+import { resetNotification } from '../../../store/profileSlice';
+import Loader from '../notificationBtns/Loader';
 export default function VoiceEditForm() {
   const [formData, setFormData] = useState({
     title: '',
@@ -18,7 +20,7 @@ export default function VoiceEditForm() {
   const [audioType,setAudioType] = useState();
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
-
+  const {notification,loading} = useSelector((state)=>state.profileSlice);
 
   const audioTypes = [
     'Narration',
@@ -28,7 +30,11 @@ export default function VoiceEditForm() {
     'Advertisement',
   ];
 
-
+  useEffect(()=>{
+      setTimeout(() => {
+            dispatch(resetNotification())
+        }, 4000);
+    },[notification])
 
   // Handle text input changes
   const handleInputChange = (e) => {
@@ -137,12 +143,7 @@ export default function VoiceEditForm() {
 
 
 
-      setIsSubmitted(true);
       
-      // Reset success message after 3 seconds
-      setTimeout(() => {
-        setIsSubmitted(false);
-      }, 3000);
     }
   };
 
@@ -163,10 +164,14 @@ export default function VoiceEditForm() {
     if (fileInput) {
       fileInput.value = '';
     }
+
+    
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className={`${notification.type !==null || loading ? 'max-h-[80vh]':'min-h-screen' } overflow-hidden bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 py-12 px-4 sm:px-6 lg:px-8`}>
+      {notification.type!==null && <Notification type={notification.type} message={notification.message}/> } 
+      {loading && <Loader/>}
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   FileAudio,
@@ -25,7 +25,8 @@ import { Button } from '../../../components/ui/Button';
 import { registerPortfolio } from '../../../store/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import Notification from '../notificationBtns/Notification';
-import axios from 'axios';
+import Loader from '../notificationBtns/Loader';
+import { resetNotification } from '../../../store/profileSlice';
 
 export default function PortfolioUploadForm() {
   const [formData, setFormData] = useState({
@@ -44,7 +45,7 @@ export default function PortfolioUploadForm() {
     thumbnail: null,
   });
   const dispatch = useDispatch();
-  const {loading,error} = useSelector((state)=>state.profileSlice)
+  const {loading,notification} = useSelector((state)=>state.profileSlice)
   const [languageInput, setLanguageInput] = useState('');
   const [voiceStyleInput, setVoiceStyleInput] = useState('');
   const [audioFileName, setAudioFileName] = useState('');
@@ -292,6 +293,12 @@ export default function PortfolioUploadForm() {
     }
   };
 
+  useEffect(()=>{
+    setTimeout(() => {
+          dispatch(resetNotification())
+      }, 4000);
+  },[notification])
+
   // Handle removing voice style tag
   const removeVoiceStyle = (style) => {
     setFormData({
@@ -381,15 +388,10 @@ export default function PortfolioUploadForm() {
         //       console.log(error.response.data);
         //   }
 
-      setIsSubmitted(true);
+      
     
       dispatch(registerPortfolio(data));
       
-      
-
-      setTimeout(() => {
-        setIsSubmitted(false);
-      }, 3000);
     }
   };
 
@@ -427,40 +429,11 @@ export default function PortfolioUploadForm() {
 
 
   return (
-    <div className="min-h-screen relative   py-12 px-4 sm:px-6 lg:px-8">
-      <div className='mb-10'>
-       
-      </div>
-       
+    <div className={`${notification.type !==null || loading ? 'max-h-[80vh]':'min-h-screen' } overflow-hidden relative py-12 px-4 sm:px-6 lg:px-8`}>
+     {notification.type!==null && <Notification type={notification.type} message={notification.message}/> } 
+       {loading && <Loader/>}
 
-      <div className="max-w-4xl mx-auto">
-        
-        
-        
-        {/* <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <div className="bg-gradient-to-r from-violet-600 to-fuchsia-600 p-4 rounded-2xl shadow-xl">
-              <Mic className="w-8 h-8 text-white" />
-            </div>
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-3">
-            Portfolio Upload
-          </h1>
-          <p className="text-lg text-gray-600">
-            Showcase your dubbing artistry and attract clients
-          </p>
-        </div> */}
-
-        {/* Success Message */}
-        {isSubmitted && (
-          <div className="mb-6 p-4 bg-green-50 border-2 border-green-200 rounded-xl flex items-center gap-3 shadow-md animate-fade-in">
-            <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0" />
-            <p className="text-green-700 font-semibold">
-              Portfolio uploaded successfully! Your work is now live. 🎉
-            </p>
-          </div>
-        )}
-
+      <div className="max-w-4xl overflow-hidden mx-auto">
         {/* Form Card */}
        <div>
         

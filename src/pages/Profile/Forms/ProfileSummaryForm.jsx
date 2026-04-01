@@ -1,7 +1,13 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { User, MapPin, Clock, Languages, Upload, CheckCircle, X } from "lucide-react";
 import { Input } from "../../../components/ui/input";
-
+import { Textarea } from "../../../components/ui/textarea";
+import axios from "axios";
+import {useSelector,useDispatch} from "react-redux";
+import Notification from '../notificationBtns/Notification';
+import {registerUserdetail} from '../../../store/actions';
+import { resetNotification } from '../../../store/profileSlice';
+import Loader from "../notificationBtns/Loader";
 export default function ProfileSummaryForm() {
   const [formData, setFormData] = useState({
     profileImage: null,
@@ -9,22 +15,33 @@ export default function ProfileSummaryForm() {
     dubbingLanguages: [],
     location: "",
     experience: "",
-    languagesKnown: [],
+    expertise: [],
   });
 
   const [dubbingLanguageInput, setDubbingLanguageInput] = useState("");
-  const [languagesKnownInput, setLanguagesKnownInput] = useState("");
+  const [expertiseInput, setExpertiseInput] = useState("");
+  const [imagePreview, setImagePreview] = useState(null);
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const {notification,loading} = useSelector((state)=>state.profileSlice);
+  const dispatch = useDispatch();
+   
 
   // 📸 Image Upload
   const handleImageUpload = (e) => {
     const file = e.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      setFormData({ ...formData, profileImage: imageUrl });
+      setImagePreview(imageUrl);
+      setFormData({ ...formData, profileImage: file });
     }
   };
+
+  useEffect(()=>{
+    setTimeout(() => {
+        dispatch(resetNotification())
+      }, 7000);
+  },[notification])
 
   // 🎤 Add Dubbing Language
   const handleDubbingLanguageKeyDown = (e) => {
@@ -54,18 +71,18 @@ export default function ProfileSummaryForm() {
   };
 
   // 🌐 Add Known Language
-  const handleLanguagesKnownKeyDown = (e) => {
-    if (e.key === "Enter" && languagesKnownInput.trim()) {
+  const handleExpertiseKeyDown = (e) => {
+    if (e.key === "Enter" && expertiseInput.trim()) {
       e.preventDefault();
-      const trimmed = languagesKnownInput.trim();
+      const trimmed = expertiseInput.trim();
 
-      if (!formData.languagesKnown.includes(trimmed)) {
+      if (!formData.expertise.includes(trimmed)) {
         setFormData({
           ...formData,
-          languagesKnown: [...formData.languagesKnown, trimmed],
+          expertise: [...formData.expertise, trimmed],
         });
-        setLanguagesKnownInput("");
-        setErrors({ ...errors, languagesKnown: undefined });
+        setExpertiseInput("");
+        setErrors({ ...errors, expertise: undefined });
       }
     }
   };
@@ -74,7 +91,7 @@ export default function ProfileSummaryForm() {
   const removeLanguageKnown = (language) => {
     setFormData({
       ...formData,
-      languagesKnown: formData.languagesKnown.filter(
+      expertise: formData.expertise.filter(
         (lang) => lang !== language
       ),
     });
@@ -92,8 +109,8 @@ export default function ProfileSummaryForm() {
       newErrors.dubbingLanguages = "Please add at least one dubbing language";
     }
 
-    if (formData.languagesKnown.length === 0) {
-      newErrors.languagesKnown = "Please add at least one language known";
+    if (formData.expertise.length === 0) {
+      newErrors.expertise = "Please add at least one language known";
     }
 
     setErrors(newErrors);
@@ -101,12 +118,35 @@ export default function ProfileSummaryForm() {
   };
 
   // 🚀 Submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (validateForm()) {
-      console.log("Form submitted successfully:", formData);
-      setIsSubmitted(true);
+
+      const mydata = new FormData();
+      Object.keys(formData).forEach((key)=>{
+
+         if(key=="dubbingLanguages"){
+           mydata.append(key,JSON.stringify(formData[key]));
+           
+         }else if(key=="expertise"){
+          mydata.append(key,JSON.stringify(formData[key]));
+         }else{
+
+           mydata.append(key,formData[key]);
+         }
+      })
+       console.log(formData)
+       dispatch(registerUserdetail(mydata));
+       
+      //  try {
+      //    const res = await axios.post("http://localhost:3000/profile/createUserProfile",mydata,{withCredentials:true});
+      //    console.log(res.data);
+      //  } catch (error) {
+      //     console.error(error.response.data);
+      //  }
+      
+      
 
       setTimeout(() => {
         setIsSubmitted(false);
@@ -122,16 +162,18 @@ export default function ProfileSummaryForm() {
       dubbingLanguages: [],
       location: "",
       experience: "",
-      languagesKnown: [],
+      expertise: [],
     });
     setDubbingLanguageInput("");
-    setLanguagesKnownInput("");
+    setExpertiseInput("");
     setErrors({});
     setIsSubmitted(false);
   };
 
   return (
-   <div className="">
+   <div className={`${notification.type !==null || loading ? 'max-h-[80vh]':'min-h-screen' } overflow-hidden relative`}>
+      {notification.type!==null && <Notification type={notification.type} message={notification.message}/> } 
+      {loading && <Loader/>}
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -165,7 +207,7 @@ export default function ProfileSummaryForm() {
                 <div className="w-32 h-32 rounded-full border-4 border-gray-200 overflow-hidden bg-gray-100 hover:border-purple-400 transition-all duration-300">
                   {formData.profileImage ? (
                     <img
-                      src={formData.profileImage}
+                      src={imagePreview}
                       alt="Profile Preview"
                       className="w-full h-full object-cover"
                     />
@@ -197,13 +239,13 @@ export default function ProfileSummaryForm() {
                 htmlFor="artistName"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Artist Name <span className="text-red-500">*</span>
+                Write about Your self <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <User className="h-5 w-5 text-gray-400" />
                 </div>
-                <Input
+                {/* <Input
                   id="artistName"
                   type="text"
                   value={formData.artistName}
@@ -214,7 +256,23 @@ export default function ProfileSummaryForm() {
                     errors.artistName ? 'border-red-500' : 'border-gray-300'
                   } `}
                   placeholder="Enter your artist name"
-                />
+                /> */}
+                 
+              <Textarea
+                id="artistName"
+                value={formData.artistName}
+                placeholder="Introduce yourself and explain why you're the perfect fit for this project..."
+                rows={7}
+                onChange={(e) =>
+                    setFormData({ ...formData, artistName: e.target.value })
+                  }
+                  className={`${
+                    errors.artistName ? 'border-red-500' : 'border-gray-300'
+                  } `}
+                //value={formData.message}
+                // onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                
+              />
               </div>
               {errors.artistName && (
                 <p className="mt-1 text-sm text-red-600">{errors.artistName}</p>
@@ -329,7 +387,7 @@ export default function ProfileSummaryForm() {
             {/* Languages Known */}
             <div>
               <label
-                htmlFor="languagesKnown"
+                htmlFor="expertise"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
                 Languages Known <span className="text-red-500">*</span>
@@ -339,13 +397,13 @@ export default function ProfileSummaryForm() {
                   <Languages className="h-5 w-5 text-gray-400" />
                 </div>
                 <Input
-                  id="languagesKnown"
+                  id="expertise"
                   type="text"
-                  value={languagesKnownInput}
-                  onChange={(e) => setLanguagesKnownInput(e.target.value)}
-                  onKeyDown={handleLanguagesKnownKeyDown}
+                  value={expertiseInput}
+                  onChange={(e) => setExpertiseInput(e.target.value)}
+                  onKeyDown={handleExpertiseKeyDown}
                   className={` ${
-                    errors.languagesKnown ? 'border-red-500' : 'border-gray-300'
+                    errors.expertise ? 'border-red-500' : 'border-gray-300'
                   } `}
                   placeholder="Type a language and press Enter"
                 />
@@ -353,16 +411,16 @@ export default function ProfileSummaryForm() {
               <p className="mt-1 text-xs text-gray-500">
                 Press Enter to add languages
               </p>
-              {errors.languagesKnown && (
+              {errors.expertise && (
                 <p className="mt-1 text-sm text-red-600">
-                  {errors.languagesKnown}
+                  {errors.expertise}
                 </p>
               )}
 
               {/* Languages Known Tags */}
-              {formData.languagesKnown.length > 0 && (
+              {formData.expertise.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
-                  {formData.languagesKnown.map((language) => (
+                  {formData.expertise.map((language) => (
                     <span
                       key={language}
                       className="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium hover:bg-blue-200 transition-colors duration-200"

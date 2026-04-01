@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { registerAudio , registerPortfolio} from "./actions";
+import { registerAudio , registerPortfolio , registerUserdetail} from "./actions";
 
 const initialState = {
     loading:false,
@@ -14,6 +14,13 @@ const initialState = {
 const profileSlice = createSlice({
     name:"profile",
     initialState,
+
+    reducers:{
+       resetNotification:(state,action)=>{
+             state.notification.type=null
+             state.notification.message=null
+       }
+    },
    
     extraReducers: (builder) => {
     builder
@@ -24,10 +31,14 @@ const profileSlice = createSlice({
       .addCase(registerAudio.fulfilled, (state, action) => {
         state.loading = false
         state.audio = action.payload.data
+        state.notification.type = "success"
+        state.notification.message = "Audio uploaded"
       })
       .addCase(registerAudio.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload
+        state.notification.type = "error"
+        state.notification.message = action.payload.message;
       })
 
       //Register Portfolio
@@ -37,8 +48,8 @@ const profileSlice = createSlice({
       .addCase(registerPortfolio.fulfilled , (state,action)=>{
         state.loading = false
         state.audio = action.payload
-        state.notification.type = "succuss"
-        state.notification.message = "Portfolio work add successfully "
+        state.notification.type = "success"
+        state.notification.message = "Portfolio work add successfully"
 
       
       })
@@ -48,9 +59,27 @@ const profileSlice = createSlice({
         state.notification.type = "error"
         state.notification.message = action.payload.message;
       })
+      //Register Profile Detail
+      .addCase(registerUserdetail.pending , (state)=>{
+        state.loading = true
+      })
+      .addCase(registerUserdetail.fulfilled , (state,action)=>{
+        state.loading = false
+        state.audio = action.payload
+        state.notification.type = "success"
+        state.notification.message = "Profile Details Added successfully"
+
+      
+      })
+      .addCase(registerUserdetail.rejected , (state,action)=>{
+        state.loading = false
+        state.error = action.payload.message
+        state.notification.type = "error"
+        state.notification.message = action.payload.message;
+      })
   }
 
 })
 
-export const {register}=profileSlice.actions
+export const {register,resetNotification}=profileSlice.actions
 export default profileSlice.reducer
