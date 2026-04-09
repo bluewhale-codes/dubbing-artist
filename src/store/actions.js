@@ -87,3 +87,17 @@ export const registerUserdetail = createAsyncThunk(
         }
      }
 )
+export const registerProject = createAsyncThunk(
+     'register/project',
+     async(formdata,{rejectWithValue})=>{
+        try {
+            const link = "http://localhost:3000/profile/create-project";
+            const res = await axios.post(link,formdata);
+            return res.data;
+        } catch (error) {
+            return rejectWithValue(
+                error.response?.data || "some thing went wrong"
+            );
+        }
+     }
+)

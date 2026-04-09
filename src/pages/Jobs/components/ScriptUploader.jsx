@@ -33,6 +33,7 @@ export function ScriptUploader({ onScriptUpload, wordCount, setWordCount }) {
   };
 
   const handleFile = (file) => {
+    
     setUploadedFile(file);
     onScriptUpload(file);
     

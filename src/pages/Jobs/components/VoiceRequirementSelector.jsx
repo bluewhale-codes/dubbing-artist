@@ -55,7 +55,7 @@ export function VoiceRequirementSelector({
           value={language}
           onChange={(e) => {
             setLanguage(e.target.value);
-            setAccent('');
+           
           }}
           className="w-full px-4 py-2 bg-input-background rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
           required
@@ -108,6 +108,7 @@ export function VoiceRequirementSelector({
 
       <div>
         <label className="block text-sm mb-2">Voice Age Range</label>
+        
         <select
           value={ageRange}
           onChange={(e) => setAgeRange(e.target.value)}

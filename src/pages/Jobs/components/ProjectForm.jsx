@@ -6,10 +6,11 @@ import { VoiceStyleTags } from './VoiceStyleTags';
 import { LicenseSelector } from './LicenseSelector';
 import { BudgetSelector } from './BudgetSelector';
 import { TimelinePicker } from './TimelinePicker';
+import { useDispatch } from 'react-redux';
 
 export function ProjectForm({ formData, setFormData }) {
   const [referenceAudioFile, setReferenceAudioFile] = useState(null);
-
+  const dispatch = useDispatch();
   const categories = [
     'Commercial Ad',
     'YouTube Video',
@@ -25,14 +26,21 @@ export function ProjectForm({ formData, setFormData }) {
 
   const fileFormats = ['WAV', 'MP3', 'Both'];
   const audioQualities = ['44.1 kHz', '48 kHz'];
-  const revisionOptions = ['1 Revision', '2 Revisions', '3 Revisions', 'Unlimited'];
+  const revisionOptions = ['1', '2', '3', '-1'];
 
-  const handleScriptUpload = (file) => {
-    setFormData({ ...formData, scriptFile: file });
+  const handleScriptUpload = (e) => {
+      if (e.target.files && e.target.files[0]) {
+      console.log(e.target.files[0]);
+      setFormData({...formData,audioscript:e.target.files[0]})
+      
+    }
+
   };
 
   const handleReferenceAudioUpload = (e) => {
     if (e.target.files && e.target.files[0]) {
+      console.log(e.target.files[0]);
+      setFormData({...formData,referenceAudioFile:e.target.files[0]})
       setReferenceAudioFile(e.target.files[0]);
     }
   };
@@ -46,7 +54,7 @@ export function ProjectForm({ formData, setFormData }) {
       {/* Section 1: Basic Project Information */}
       <section className="bg-white rounded-xl shadow-md border border-gray-200 p-6 md:p-8">
         <h2 className="mb-6">Basic Project Information</h2>
-        
+
         <div className="space-y-6">
           <div>
             <label className="block text-sm mb-2">Project Title *</label>
@@ -123,11 +131,20 @@ export function ProjectForm({ formData, setFormData }) {
       {/* Section 2: Script Details */}
       <section className="bg-white rounded-xl shadow-md border border-gray-200 p-6 md:p-8">
         <h2 className="mb-6">Script Details</h2>
-        <ScriptUploader
+         {/* <ScriptUploader
           onScriptUpload={handleScriptUpload}
           wordCount={formData.wordCount}
           setWordCount={(count) => setFormData({ ...formData, wordCount: count })}
-        />
+        /> */}
+        <input
+                  type="file"
+                  id="script-audio"
+                  className=""
+                  onChange={handleScriptUpload}
+                  accept=".txt,.doc,.docx,.pdf"
+                />
+
+
       </section>
 
       {/* Section 3: Voice Requirements */}
@@ -157,7 +174,7 @@ export function ProjectForm({ formData, setFormData }) {
       {/* Section 5: Reference Examples */}
       <section className="bg-white rounded-xl shadow-md border border-gray-200 p-6 md:p-8">
         <h2 className="mb-6">Reference Examples</h2>
-        
+
         <div className="space-y-6">
           <div>
             <label className="block text-sm mb-2">Reference Audio Upload</label>
@@ -217,7 +234,9 @@ export function ProjectForm({ formData, setFormData }) {
           region={formData.region}
           setRegion={(reg) => setFormData({ ...formData, region: reg })}
           duration={formData.duration}
-          setDuration={(dur) => setFormData({ ...formData, duration: dur })}
+          setDuration={(dur) => setFormData({ ...formData, duration:dur})}
+          monthyear={formData.monthyear}
+          setMonthyear={(mon)=>setFormData({...formData,monthyear:mon})}
         />
       </section>
 
@@ -248,7 +267,7 @@ export function ProjectForm({ formData, setFormData }) {
       {/* Section 9: Revisions */}
       <section className="bg-white rounded-xl shadow-md border border-gray-200 p-6 md:p-8">
         <h2 className="mb-6">Revisions</h2>
-        
+
         <div className="space-y-6">
           <div>
             <label className="block text-sm mb-2">Number of Revisions Included *</label>
@@ -292,7 +311,7 @@ export function ProjectForm({ formData, setFormData }) {
       {/* Section 10: Audio Requirements */}
       <section className="bg-white rounded-xl shadow-md border border-gray-200 p-6 md:p-8">
         <h2 className="mb-6">Audio Requirements</h2>
-        
+
         <div className="space-y-6">
           <div>
             <label className="block text-sm mb-3">File Format *</label>
@@ -352,7 +371,7 @@ export function ProjectForm({ formData, setFormData }) {
       {/* Section 11: Audition Requirement */}
       <section className="bg-white rounded-xl shadow-md border border-gray-200 p-6 md:p-8">
         <h2 className="mb-6">Audition Requirement</h2>
-        
+
         <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200">
           <div>
             <p className="text-sm">Require Audition Before Hiring</p>
@@ -379,7 +398,7 @@ export function ProjectForm({ formData, setFormData }) {
       {/* Section 12: Additional Instructions */}
       <section className="bg-white rounded-xl shadow-md border border-gray-200 p-6 md:p-8">
         <h2 className="mb-6">Additional Instructions</h2>
-        
+
         <div>
           <label className="block text-sm mb-2">Extra Instructions for Voice Artists</label>
           <textarea

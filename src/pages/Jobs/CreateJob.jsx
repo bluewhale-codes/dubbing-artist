@@ -1,11 +1,18 @@
-import { useState } from 'react';
+import { useState , useEffect} from 'react';
 import { Save, Send, ArrowLeft } from 'lucide-react';
 import { ProjectForm } from './components/ProjectForm';
 import { ProjectSummaryCard } from './components/ProjectSummaryCard';
 import { toast } from 'sonner';
 import { Toaster } from 'sonner';
-
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerProject } from '../../store/actions';
+import Loader from './notificationBtn/Loader';
 export default function CreateJob() {
+
+
+  const dispatch = useDispatch();
+  const {loading,notification} = useSelector((state)=>state.profileSlice)
   const [formData, setFormData] = useState({
     // Section 1: Basic Information
     projectTitle: '',
@@ -15,8 +22,8 @@ export default function CreateJob() {
     referenceUrl: '',
     
     // Section 2: Script Details
-    scriptFile: null,
-    wordCount: 0,
+    audioscript:null,
+   // wordCount: 0,
     
     // Section 3: Voice Requirements
     language: '',
@@ -35,6 +42,7 @@ export default function CreateJob() {
     usageTypes: [],
     region: '',
     duration: '',
+    monthyear:'',
     
     // Section 7: Budget
     pricingModel: '',
@@ -67,12 +75,12 @@ export default function CreateJob() {
     if (!formData.projectTitle) errors.push('Project Title is required');
     if (!formData.category) errors.push('Project Category is required');
     if (!formData.description) errors.push('Project Description is required');
-    if (formData.wordCount === 0) errors.push('Word Count is required');
+   // if (formData.wordCount === 0) errors.push('Word Count is required');
     if (!formData.language) errors.push('Language is required');
     if (!formData.gender) errors.push('Gender is required');
     if (formData.usageTypes.length === 0) errors.push('At least one Usage Type is required');
     if (!formData.region) errors.push('Region is required');
-    if (!formData.duration) errors.push('Usage Duration is required');
+   // if (!formData.duration) errors.push('Usage Duration is required');
     if (!formData.pricingModel) errors.push('Pricing Model is required');
     if (!formData.deadline) errors.push('Deadline is required');
     if (!formData.deliverySpeed) errors.push('Delivery Speed is required');
@@ -92,7 +100,7 @@ export default function CreateJob() {
     });
   };
 
-  const handlePublishProject = (e) => {
+  const handlePublishProject = async (e) => {
     e.preventDefault();
     
     const errors = validateForm();
@@ -105,22 +113,55 @@ export default function CreateJob() {
       return;
     }
 
-    // Mock publish functionality
-    toast.success('Project published successfully!', {
+    //Mock publish functionality
+    
+
+    const data = new FormData();
+
+    Object.keys(formData).forEach((key)=>{
+
+      if(key=="audioscript"){
+        data.append("script",formData[key]);
+      }else if(key=="usageTypes"){
+             data.append(key,JSON.stringify(formData[key]));
+          }
+          else if(key=="voiceStyles"){
+             data.append(key,JSON.stringify(formData[key]));
+          }
+      else if(key=="referenceAudioFile"){
+        data.append("audioFile",formData[key]);
+      }else{
+
+        data.append(key,formData[key]);
+      }
+    })
+
+    console.log('Published Project Data:', formData);
+   dispatch(registerProject(data));
+   
+
+    // try {
+    //       console.log("Request start")
+    //       const res = await axios.post('http://localhost:3000/profile/upload_script',data)
+    //       console.log(res.data);
+    // } catch (error) {
+    //    console.log(error.response.data);
+    // }
+  };
+
+   useEffect(()=>{
+      if(notification.type!==null){
+        toast.success('Project published successfully!', {
       description: 'Voice artists can now submit proposals for your project.',
       duration: 4000,
     });
-
-    console.log('Published Project Data:', formData);
-    
-    // Reset form after successful publish (optional)
-    // setFormData({ ... initial state ... });
-  };
+      }
+  },[notification])
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={`min-h-screen bg-gray-50  ${loading ? "max-h-[100vh] overflow-hidden" : ""}`}>
       <Toaster position="top-right" richColors />
-      
+       {loading && <Loader/> }
       {/* Header
       <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">

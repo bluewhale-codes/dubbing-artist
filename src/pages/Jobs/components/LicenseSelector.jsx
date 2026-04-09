@@ -7,7 +7,9 @@ export function LicenseSelector({
   region, 
   setRegion,
   duration,
-  setDuration 
+  setDuration ,
+  monthyear,
+  setMonthyear
 }) {
   const usageOptions = [
     'Internal Company Use',
@@ -22,10 +24,22 @@ export function LicenseSelector({
   const regionOptions = ['Local', 'National', 'Worldwide'];
   
   const durationOptions = [
-    '3 months',
-    '6 months',
-    '12 months',
-    'In Perpetuity'
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    '11',
+    '12',
+  ];
+  const labels = [
+    'months',
+    'years',
   ];
 
   const toggleUsageType = (type) => {
@@ -98,7 +112,8 @@ export function LicenseSelector({
 
         <div>
           <label className="block text-sm mb-2">Usage Duration *</label>
-          <select
+          <div>
+            <select
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
             className="w-full px-4 py-2 bg-input-background rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
@@ -111,6 +126,23 @@ export function LicenseSelector({
               </option>
             ))}
           </select>
+          </div>
+          <div className='mt-2'>
+            <select
+            value={monthyear}
+            onChange={(e) => setMonthyear(e.target.value)}
+            className="w-full px-4 py-2 bg-input-background rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+            required
+          >
+            <option value="">month/year</option>
+            {labels.map((label) => (
+              <option key={label} value={label}>
+                {label}
+              </option>
+            ))}
+          </select>
+          </div>
+          
         </div>
       </div>
 

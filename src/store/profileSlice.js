@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { registerAudio , registerPortfolio , registerUserdetail} from "./actions";
+import { registerAudio , registerPortfolio , registerUserdetail,registerProject} from "./actions";
 
 const initialState = {
     loading:false,
@@ -9,7 +9,8 @@ const initialState = {
     notification:{
         type:null,
         message:null
-    }
+    },
+    
 }
 const profileSlice = createSlice({
     name:"profile",
@@ -19,7 +20,8 @@ const profileSlice = createSlice({
        resetNotification:(state,action)=>{
              state.notification.type=null
              state.notification.message=null
-       }
+       },
+       
     },
    
     extraReducers: (builder) => {
@@ -65,13 +67,31 @@ const profileSlice = createSlice({
       })
       .addCase(registerUserdetail.fulfilled , (state,action)=>{
         state.loading = false
-        state.audio = action.payload
         state.notification.type = "success"
         state.notification.message = "Profile Details Added successfully"
 
       
       })
       .addCase(registerUserdetail.rejected , (state,action)=>{
+        state.loading = false
+        state.error = action.payload.message
+        state.notification.type = "error"
+        state.notification.message = action.payload.message;
+      })
+
+      //create project
+      .addCase(registerProject.pending , (state)=>{
+        state.loading = true
+      })
+      .addCase(registerProject.fulfilled , (state,action)=>{
+        state.loading = false
+        state.audio = action.payload
+        state.notification.type = "success"
+        state.notification.message = "Project Added successfully"
+
+      
+      })
+      .addCase(registerProject.rejected , (state,action)=>{
         state.loading = false
         state.error = action.payload.message
         state.notification.type = "error"
