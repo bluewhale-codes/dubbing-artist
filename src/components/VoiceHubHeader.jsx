@@ -1,9 +1,21 @@
-import { useState } from 'react';
+import { useState ,  useEffect } from 'react';
 import { Menu, X, Mic2 } from 'lucide-react';
 import { Button } from './ui/Button';
 import logoVideo from './vedio/logo.mp4'
+import { useSelector,useDispatch } from 'react-redux';
+import { getUser } from '../store/actions';
+import { DropdownMenuHeader } from './DropDownMenu';
 export default function VoiceHubHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const dispatch = useDispatch();
+  const {user,isAuthenticated} = useSelector((state)=>state.profileSlice);
+
+
+
+
+  useEffect(()=>{
+    dispatch(getUser());
+  },[])
 
   return (
     <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
@@ -51,12 +63,17 @@ export default function VoiceHubHeader() {
 
           {/* Desktop Buttons */}
           <div className="hidden md:flex items-center gap-4">
-            <Button  variant="ghost" asChild={true} className="text-gray-700 hover:text-cyan-600">
-              <a href='/auth/login'>SignIn</a>
-            </Button>
-            <Button asChild={true} className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white shadow-lg shadow-cyan-500/30">
-              <a href='/createproject'>Create Project </a>
-            </Button>
+           
+            {isAuthenticated ? 
+             <div className='flex justify-center align-item'>
+              
+          
+               <DropdownMenuHeader/>
+              
+              </div>
+             :  <Button asChild={true} className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white shadow-lg shadow-cyan-500/30">
+                <a href='/auth/login'>SignUp</a>
+              </Button> }
           </div>
 
           {/* Mobile Menu Button */}

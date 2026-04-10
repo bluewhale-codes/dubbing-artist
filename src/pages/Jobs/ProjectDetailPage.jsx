@@ -15,12 +15,21 @@ import {
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
-import { useState } from 'react';
 
+import { useState , useEffect} from 'react';
+import { useParams } from 'react-router';
+import { getProjectDetail } from '../../store/actions';
+import { useDispatch, useSelector} from 'react-redux';
+import Loader from "./notificationBtn/Loader"
 const ProjectDetailPage = () => {
   const [isAdditionalExpanded, setIsAdditionalExpanded] = useState(true);
   const [isMediaExpanded, setIsMediaExpanded] = useState(true);
+  
 
+
+  const {loading,project} = useSelector((state)=>state.profileSlice);
+  const dispatch = useDispatch();
+  const {id} = useParams();
   // Project data
   const projectData = {
   title: "YouTube Product Promo Voiceover",
@@ -62,11 +71,16 @@ const ProjectDetailPage = () => {
   };
 
   const downloadAudio = () => {
-    window.open(projectData.audioUrl, '_blank');
+    window.open(project?.details?.referenceAudio.url, '_blank');
   };
+
+  useEffect(()=>{
+    dispatch(getProjectDetail(id));
+  },[id])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 px-4 sm:px-6 lg:px-8">
+      
       <div className="max-w-5xl mx-auto">
         {/* Header Section */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6 transition-all duration-300 hover:shadow-xl">
@@ -75,14 +89,14 @@ const ProjectDetailPage = () => {
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-3 mb-3">
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-500 text-white">
-                    {projectData.category}
+                    {project?.details?.category}
                   </span>
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-500 text-white">
-                    {projectData.status}
+                    {/* {projectData.status} */}
                   </span>
                 </div>
                 <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
-                  {projectData.title}
+                  {project?.details?.title}
                 </h1>
               </div>
               <div className="flex gap-2">
@@ -111,12 +125,12 @@ const ProjectDetailPage = () => {
               <div className="space-y-4">
                 <div>
                   <label className="text-sm font-medium text-gray-500 block mb-1">Description</label>
-                  <p className="text-gray-900">{projectData.description}</p>
+                  <p className="text-gray-900">{project?.details?.projectDescription}</p>
                 </div>
                 <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
                   <Briefcase className="w-4 h-4 text-gray-400" />
                   <label className="text-sm font-medium text-gray-500">Industry:</label>
-                  <span className="text-gray-900 font-medium">{projectData.industry}</span>
+                  <span className="text-gray-900 font-medium">{project?.details?.industryType}</span>
                 </div>
               </div>
             </div>
@@ -134,7 +148,7 @@ const ProjectDetailPage = () => {
                     Language
                   </label>
                   <span className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-blue-50 text-blue-700 border border-blue-200">
-                    {projectData.language}
+                    {project?.details?.language}
                   </span>
                 </div>
                 <div>
@@ -143,7 +157,7 @@ const ProjectDetailPage = () => {
                     Accent
                   </label>
                   <span className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-50 text-gray-700 border border-gray-200">
-                    {projectData.accent}
+                    {project?.details?.accent}
                   </span>
                 </div>
                 <div>
@@ -152,7 +166,7 @@ const ProjectDetailPage = () => {
                     Gender
                   </label>
                   <span className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-purple-50 text-purple-700 border border-purple-200">
-                    {projectData.gender}
+                    {project?.details?.gender}
                   </span>
                 </div>
                 <div>
@@ -161,14 +175,14 @@ const ProjectDetailPage = () => {
                     Age Range
                   </label>
                   <span className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-green-50 text-green-700 border border-green-200">
-                    {projectData.voiceAgeRange.label}
+                    {project?.details?.voiceAgeRange}
                   </span>
                 </div>
               </div>
               <div className="mt-4 pt-4 border-t border-gray-100">
                 <label className="text-sm font-medium text-gray-500 block mb-2">Voice Style & Tone</label>
                 <div className="flex flex-wrap gap-2">
-                  {projectData.voiceStyle.map((style, index) => (
+                  {project?.details?.voiceStyleTone.map((style, index) => (
                     <span
                       key={index}
                       className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-sm"
@@ -204,17 +218,17 @@ const ProjectDetailPage = () => {
                       className="w-full"
                       style={{ height: '40px' }}
                     >
-                      <source src={projectData.audioUrl} type="audio/mpeg" />
+                      <source src={project?.details?.referenceAudio.url} type="audio/mpeg" />
                       Your browser does not support the audio element.
                     </audio>
                   </div>
                   <div className="flex items-center justify-between flex-wrap gap-3">
                     <div className="flex items-center gap-4 text-sm text-gray-600">
                       <span className="flex items-center gap-1">
-                        <span className="font-medium">Format:</span> {projectData.fileFormat}
+                        <span className="font-medium">Format:</span> {project?.details?.fileFormat}
                       </span>
                       <span className="flex items-center gap-1">
-                        <span className="font-medium">Quality:</span> {projectData.audioQuality}
+                        <span className="font-medium">Quality:</span> {project?.details?.audioQuality}
                       </span>
                     </div>
                     <button
@@ -239,7 +253,7 @@ const ProjectDetailPage = () => {
                 <div>
                   <label className="text-sm font-medium text-gray-500 block mb-2">Usage Types</label>
                   <div className="flex flex-wrap gap-2">
-                    {projectData.usage.map((use, index) => (
+                    {project?.details?.usage.map((use, index) => (
                       <span
                         key={index}
                         className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-indigo-50 text-indigo-700 border border-indigo-200"
@@ -254,14 +268,14 @@ const ProjectDetailPage = () => {
                     <Globe className="w-4 h-4 text-gray-400" />
                     <div>
                       <label className="text-sm font-medium text-gray-500 block">Region</label>
-                      <span className="text-gray-900 font-medium">{projectData.region}</span>
+                      <span className="text-gray-900 font-medium">{project?.details?.region}</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4 text-gray-400" />
                     <div>
                       <label className="text-sm font-medium text-gray-500 block">Duration</label>
-                      <span className="text-gray-900 font-medium">{projectData.duration} months</span>
+                      <span className="text-gray-900 font-medium">{project?.details?.usageDuration.value} {project?.details?.usageDuration.unit}</span>
                     </div>
                   </div>
                 </div>
@@ -280,12 +294,12 @@ const ProjectDetailPage = () => {
               <div className="space-y-4">
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
                   <label className="text-sm font-medium text-blue-600 block mb-1">Pricing Model</label>
-                  <p className="text-2xl font-bold text-blue-900">{projectData.pricingModel}</p>
+                  <p className="text-2xl font-bold text-blue-900">{project?.details?.pricingModel}</p>
                 </div>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between py-2 border-b border-gray-100">
                     <label className="text-sm font-medium text-gray-500">Delivery Speed</label>
-                    <span className="text-gray-900 font-medium capitalize">{projectData.deliverySpeed}</span>
+                    <span className="text-gray-900 font-medium capitalize">{project?.details?.deliverySpeed}</span>
                   </div>
                   <div className="flex items-center justify-between py-2 border-b border-gray-100">
                     <label className="text-sm font-medium text-gray-500 flex items-center gap-1">
@@ -293,18 +307,18 @@ const ProjectDetailPage = () => {
                       Deadline
                     </label>
                     <span className="text-gray-900 font-medium text-right text-sm">
-                      {formatDate(projectData.deadline)}
+                      {formatDate(project?.details?.deadlineDate)}
                     </span>
                   </div>
                   <div className="flex items-center justify-between py-2 border-b border-gray-100">
                     <label className="text-sm font-medium text-gray-500">Revisions</label>
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                      {projectData.revisions} included
+                      {project?.details?.revisions} included
                     </span>
                   </div>
                   <div className="flex items-center justify-between py-2">
                     <label className="text-sm font-medium text-gray-500">File Format</label>
-                    <span className="text-gray-900 font-medium">{projectData.fileFormat}</span>
+                    <span className="text-gray-900 font-medium">{project?.details?.fileFormat}</span>
                   </div>
                 </div>
                 <button className="w-full mt-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
@@ -330,7 +344,7 @@ const ProjectDetailPage = () => {
                 <div className="p-6 pt-0">
                   <div className="bg-gray-50 rounded-lg p-4">
                     <label className="text-sm font-medium text-gray-500 block mb-2">Additional Instructions</label>
-                    <p className="text-gray-900 leading-relaxed">{projectData.additionalInstructions}</p>
+                    <p className="text-gray-900 leading-relaxed">{project?.details?.additionalInstructions}</p>
                   </div>
                 </div>
               )}

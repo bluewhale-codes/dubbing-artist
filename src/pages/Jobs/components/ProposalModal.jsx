@@ -1,49 +1,86 @@
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import { X, Upload, DollarSign, Clock } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../../../components/ui/dialog";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
 import { Textarea } from "../../../components/ui/textarea";
 import { Button } from "../../../components/ui/Button";
-
+import Loader from "../notificationBtn/Loader";
+import axios from "axios";
+import Notification from "../notificationBtn/Notification";
+import { useDispatch,useSelector } from "react-redux";
+import { createProposal } from "../../../store/actions";
+import { resetNotification } from "../../../store/profileSlice";
 export default function ProposalModal({ project, onClose }) {
   const [formData, setFormData] = useState({
-    customPrice: project.budget,
+    customPrice: project.budget.max,
     deliveryDays: 3,
     message: "",
     demoFile: null,
+
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert("Proposal sent successfully!");
-    onClose();
+  const dispatch = useDispatch();
+  const {loading , notification} = useSelector((state)=>state.profileSlice);
+
+  const handleSubmit = async () => {
+ 
+    
+    const data = new FormData();
+    Object.keys(formData).forEach((key)=>{
+       data.append(key,formData[key])
+    })
+    data.append("receiver",project.user);
+    data.append("project",project._id)
+
+    dispatch(createProposal(data));
+    // try {
+    //       console.log("Request start")
+    //       const res = await axios.post('http://localhost:3000/profile/create-proposal',data,{withCredentials:true})
+    //       console.log(res.data);
+    // } catch (error) {
+    //    console.log(error.response.data);
+    // }
+     
+    
   };
+
+  useEffect(()=>{
+    setTimeout(() => {
+        dispatch(resetNotification())
+      }, 7000);
+  },[notification])
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
         <DialogHeader>
           <DialogTitle>Send Proposal</DialogTitle>
           <DialogDescription>
             Submit your proposal for: <span className="font-semibold text-gray-900">{project.title}</span>
           </DialogDescription>
         </DialogHeader>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
+      
+        <div className="relative">
+          {notification.type!==null && <Notification type={notification.type} message={notification.message}/> } 
+          {loading && <Loader/>}
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
           {/* Project Summary */}
           <div className="bg-gray-50 p-4 rounded-lg space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-600">Word Count:</span>
-              <span className="font-medium">{project.wordCount} words</span>
+              {/* <span className="font-medium">{project.wordCount} words</span> */}
+              <span className="font-medium">34 words</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Client Budget:</span>
-              <span className="font-medium text-green-600">${project.budget}</span>
+              <span className="font-medium text-green-600">${project.budget.max}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">License Type:</span>
-              <span className="font-medium">{project.licenseType}</span>
+              {/* <span className="font-medium">{project.licenseType}</span> */}
+              <span className="font-medium">Brodcast</span>
             </div>
           </div>
 
@@ -126,14 +163,19 @@ export default function ProposalModal({ project, onClose }) {
           </div>
 
           <DialogFooter>
+            
+            
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
             <Button type="submit" className="bg-purple-600 hover:bg-purple-700">
               Submit Proposal
             </Button>
+          
           </DialogFooter>
         </form>
+        </div>
+        
       </DialogContent>
     </Dialog>
   );

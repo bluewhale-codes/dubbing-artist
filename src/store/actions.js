@@ -92,7 +92,7 @@ export const registerProject = createAsyncThunk(
      async(formdata,{rejectWithValue})=>{
         try {
             const link = "http://localhost:3000/profile/create-project";
-            const res = await axios.post(link,formdata);
+            const res = await axios.post(link,formdata,{withCredentials:true});
             return res.data;
         } catch (error) {
             return rejectWithValue(
@@ -101,3 +101,75 @@ export const registerProject = createAsyncThunk(
         }
      }
 )
+// Get all Project here
+
+export const getAllProjects = createAsyncThunk(
+     "get/projects",
+  async (_, { rejectWithValue }) => {
+    try {
+      const link = "http://localhost:3000/profile/get-allprojects"; // ✅ your GET endpoint
+
+      const res = await axios.get(link, {
+        withCredentials: true,
+      });
+
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Something went wrong"
+      );
+    }
+  }
+)
+export const getProjectDetail = createAsyncThunk(
+     "get/details",
+  async (id, { rejectWithValue }) => {
+    try {
+      const link = `http://localhost:3000/profile/get-details/${id}`; // ✅ your GET endpoint
+
+      const res = await axios.get(link);
+
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Something went wrong"
+      );
+    }
+  }
+)
+
+// get login user
+export const getUser = createAsyncThunk(
+     "get/User",
+  async (_, { rejectWithValue }) => {
+    try {
+      const link = "http://localhost:3000/api/me"; // ✅ your GET endpoint
+
+      const res = await axios.get(link, {
+        withCredentials: true,
+      });
+
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Something went wrong"
+      );
+    }
+  }
+)
+
+export const createProposal = createAsyncThunk(
+     'create/proposal',
+     async(formdata,{rejectWithValue})=>{
+        try {
+            const link = "http://localhost:3000/profile/create-proposal";
+            const res = await axios.post(link,formdata,{withCredentials:true});
+            return res.data;
+        } catch (error) {
+            return rejectWithValue(
+                error.response?.data || "some thing went wrong"
+            );
+        }
+     }
+)
+
