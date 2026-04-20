@@ -14,6 +14,8 @@ import Test from './testing/Test'
 import { Provider } from 'react-redux'
 import store from './store/store'
 import ProjectDetailPage from './pages/Jobs/ProjectDetailPage'
+import Hello from './components/Hello'
+import ScrollytellingSection from './components/ScrollytellingSection'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <>
@@ -26,10 +28,15 @@ const router = createBrowserRouter(createRoutesFromElements(
               <Route path='proposal/' element={<ClientProposal/>}/>
               <Route path='jobs/' element={<JobLists/>}/>
               <Route path='detail/:id' element={<ProjectDetailPage/>}/>
+              <Route path='hello' element={<Hello/>}/>
+              <Route path='mystory' element={<ScrollytellingSection/>}/>
+              
       </Route>
       <Route path='/auth' element={<AuthLayout/>}>
                <Route path='login' element={<AuthPage/>}/>
+               
       </Route>
+     
   </>
 ))
 

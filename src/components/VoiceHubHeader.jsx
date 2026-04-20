@@ -8,8 +8,8 @@ import { DropdownMenuHeader } from './DropDownMenu';
 export default function VoiceHubHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const dispatch = useDispatch();
-  const {user,isAuthenticated} = useSelector((state)=>state.profileSlice);
-
+  const {user,isAuthenticated,loading} = useSelector((state)=>state.profileSlice);
+ 
 
 
 
@@ -62,7 +62,7 @@ export default function VoiceHubHeader() {
           </div>
 
           {/* Desktop Buttons */}
-          <div className="hidden md:flex items-center gap-4">
+          {!loading && <div className="hidden md:flex items-center gap-4">
            
             {isAuthenticated ? 
              <div className='flex justify-center align-item'>
@@ -74,7 +74,7 @@ export default function VoiceHubHeader() {
              :  <Button asChild={true} className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white shadow-lg shadow-cyan-500/30">
                 <a href='/auth/login'>SignUp</a>
               </Button> }
-          </div>
+          </div>}
 
           {/* Mobile Menu Button */}
           <button

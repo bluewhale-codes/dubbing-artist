@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ProposalCard } from './components/ProposalCard';
 import { Filter, Search } from 'lucide-react';
 import {Button} from "../../components/ui/Button"
 import { ChevronLeft } from 'lucide-react';
 import logoVideo from "../../components/vedio/logo.mp4"
 import { useNavigate } from 'react-router';
+import { useDispatch , useSelector } from 'react-redux';
+import axios from 'axios';
+import {getProposals } from '../../store/actions';
 
 // Mock data for proposals
 const mockProposals = [
@@ -30,7 +33,7 @@ const mockProposals = [
       tone: 'Energetic'
     },
     attachments: ['Script_Episode1.pdf', 'Character_Reference.mp3'],
-    status: 'pending',
+    status: 'PENDING',
     timeAgo: '2 hours ago',
     isUrgent: true,
     matchScore: 95
@@ -174,10 +177,12 @@ export default function ClientProposal() {
   const [filterStatus, setFilterStatus] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+   
+  const prop  = useSelector((state)=>state.profileSlice.proposals);
   const handleAccept = (id) => {
     setProposals(proposals.map(p => 
-      p.id === id ? { ...p, status: 'accepted' } : p
+      p.id === id ? { ...p, status: '' } : p
     ));
     // You could show a toast notification here
     console.log(`Proposal ${id} accepted! Auto-message: "Hi, I'd love to work on this project!"`);
@@ -206,6 +211,25 @@ export default function ClientProposal() {
   const pendingCount = proposals.filter(p => p.status === 'pending').length;
   const acceptedCount = proposals.filter(p => p.status === 'accepted').length;
 
+
+  const fetchProposals = async () =>{
+     
+       try {
+           
+           const res  = await axios.get("http://localhost:3000/profile/get-proposal", {
+             withCredentials:true
+           })
+            console.log(res.data.proposals);
+       } catch (error) {
+            console.log(error.response.data);
+       }
+  }
+  useEffect(()=>{
+     dispatch(getProposals())
+  },[dispatch])
+
+  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50/30">
       {/* Header */}
@@ -232,6 +256,7 @@ export default function ClientProposal() {
                     </p>
                 </div>
             </div>
+            <button onClick={fetchProposals}>Fetch</button>
             
             {/* Search Bar */}
             <div>
@@ -314,7 +339,7 @@ export default function ClientProposal() {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {filteredProposals.map(proposal => (
+            {prop.map(proposal => (
               <ProposalCard
                 key={proposal.id}
                 proposal={proposal}

@@ -7,8 +7,17 @@ import { StudioEquipment } from "./components/StudioEquipment";
 import { Portfolio } from "./components/Portfolio";
 import { ClientReviews } from "./components/ClientReviews";
 import { AvailabilitySection } from "./components/AvailabilitySection";
+import { useSelector , useDispatch } from "react-redux";
+import { getUser } from "../../store/actions";
+import { useEffect } from "react";
 
 export default function ProfilePage() {
+   
+
+  const {user , loading } = useSelector((state)=>state.profileSlice);
+
+  
+   
   // Mock artist data
   const artistData = {
     profileImage: "https://images.unsplash.com/photo-1740102075520-fe22a53035cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjB2b2ljZSUyMGFjdG9yJTIwcG9ydHJhaXR8ZW58MXx8fHwxNzczNzMwNTU5fDA&ixlib=rb-4.1.0&q=80&w=1080",
@@ -48,6 +57,7 @@ I believe in delivering excellence and ensuring that every line resonates with a
     ]
   };
 
+  
   return (
     <div className="mt-20px min-h-screen bg-[url('https://res.cloudinary.com/dycjjaxsk/image/upload/v1773135326/retro-digital-art-illustration-person-using-radio-technology_ghkwld.jpg')] bg-cover bg-center ">
       
@@ -75,13 +85,15 @@ I believe in delivering excellence and ensuring that every line resonates with a
 
           {/* Right Column - About Section (2/3 width on desktop) */}
           <div className="lg:col-span-2">
+            
             <AboutSection/>
-            <VoiceDemoSection/>
+             {user?.user?.role==="artist" && <div><VoiceDemoSection/>
             <SkillsSection/>
             <LanguagesSection/>
             <StudioEquipment/>
-            <Portfolio/>
+            <Portfolio/></div>}
             <ClientReviews/>
+            
             <AvailabilitySection/>
           </div>
         </div>

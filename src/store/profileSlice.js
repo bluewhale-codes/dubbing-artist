@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { registerAudio , registerPortfolio , registerUserdetail,registerProject, getAllProjects, getProjectDetail, getUser, createProposal} from "./actions";
+import { registerAudio , registerPortfolio , registerUserdetail,registerProject, getAllProjects, getProjectDetail, getUser,getProposals, createProposal, acceptProposal} from "./actions";
 
 const initialState = {
     loading:false,
@@ -12,6 +12,7 @@ const initialState = {
     },
     projects:[],
     project:{},
+    proposals:[],
     isAuthenticated:false,
     user:{}
     
@@ -156,6 +157,34 @@ const profileSlice = createSlice({
         state.loading = false
         state.notification.type = "error"
         state.notification.message = action.payload.message
+      })
+      // Get login user Proposals
+       .addCase(getProposals.pending , (state)=>{
+        state.loading = true
+      })
+      .addCase(getProposals.fulfilled , (state,action)=>{
+        state.loading = false
+        state.proposals = action.payload
+      })
+      .addCase(getProposals.rejected , (state,action)=>{
+        state.loading = false
+        state.notification.type = "error"
+        state.notification.message = action.payload.message;
+      })
+
+      // Accept Proposal
+       .addCase(acceptProposal.pending , (state)=>{
+        state.loading = true
+      })
+      .addCase(acceptProposal.fulfilled , (state,action)=>{
+        state.loading = false
+        state.notification.type = "success"
+        state.notification.message = "Proposal Accepted"
+      })
+      .addCase(acceptProposal.rejected , (state,action)=>{
+        state.loading = false
+        state.notification.type = "error"
+        state.notification.message = action.payload.message;
       })
   }
 

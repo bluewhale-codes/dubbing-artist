@@ -173,3 +173,34 @@ export const createProposal = createAsyncThunk(
      }
 )
 
+
+export const getProposals = createAsyncThunk(
+     "get/proposals",
+  async (_, { rejectWithValue }) => {
+    try {
+      const link = "http://localhost:3000/profile/get-proposal"; // ✅ your GET endpoint
+
+      const res = await axios.get(link,{withCredentials:true});
+
+      return res.data.proposals;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Something went wrong"
+      );
+    }
+  }
+)
+export const acceptProposal = createAsyncThunk(
+     'accept/proposal',
+     async(id,{rejectWithValue})=>{
+        try {
+            const link = "http://localhost:3000/profile/accept-proposal";
+            const res = await axios.post(link,{"proposal_id":id},{withCredentials:true});
+            return res.data;
+        } catch (error) {
+            return rejectWithValue(
+                error.response?.data || "some thing went wrong"
+            );
+        }
+     }
+)

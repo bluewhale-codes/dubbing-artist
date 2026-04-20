@@ -1,15 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DollarSign ,Calendar, FileText,CheckCircle,MessageCircle,XCircle} from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../../../components/ui/dialog";
-
-import { useSelector } from "react-redux";
+import { acceptProposal } from "../../../store/actions";
+import { useSelector , useDispatch } from "react-redux";
+import Notification from "../notificationBtns/Notification";
+import Loader from "../notificationBtns/Loader";
+import { resetNotification } from "../../../store/profileSlice";
+import ContractForm from "./ContractForm";
+import FormDialog from "../Forms/FormDialog";
 export default function ProposalDetail({ proposal, onClose }) {
   
+  const dispatch = useDispatch();
+
+  const {loading,notification} = useSelector((state)=>state.profileSlice);
+  
+
+
+  const onAccept = (id)=>{
+       dispatch(acceptProposal(id));
+  }
+
+
+  useEffect(()=>{
+      setTimeout(() => {
+          dispatch(resetNotification())
+        }, 3000);
+    },[notification])
 
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
         <DialogHeader>
           <DialogTitle>Send Proposal</DialogTitle>
           <DialogDescription>
@@ -18,23 +39,25 @@ export default function ProposalDetail({ proposal, onClose }) {
         </DialogHeader>
 
             <div>
-              
+              {notification.type!==null && <Notification type={notification.type} message={notification.message}/> } 
+          {loading && <Loader/>}
+          
                {/* Client Details */}
                 <div className="px-6 py-4 bg-blue-50/50 border-y border-blue-100">
                     <div className="flex items-center gap-3">
                     <img 
-                        src={proposal.client.avatar} 
-                        alt={proposal.client.name}
+                        src={proposal.sender_avatar.url} 
+                        alt={proposal.name}
                         className="w-12 h-12 rounded-full border-2 border-white shadow-sm"
                     />
                     <div className="flex-1">
-                        <h4 className="font-medium text-gray-800">{proposal.client.name}</h4>
+                        <h4 className="font-medium text-gray-800">{proposal.sender_name}</h4>
                         <div className="flex items-center gap-3 text-sm text-gray-600">
                         <span className="flex items-center gap-1">
-                            ⭐ {proposal.client.rating}
+                            {/* ⭐ {proposal.client.rating} */}
                         </span>
                         <span className="text-gray-400">•</span>
-                        <span>{proposal.client.projectsPosted} projects</span>
+                        {/* <span>{proposal.client.projectsPosted} projects</span> */}
                         </div>
                     </div>
                     </div>
@@ -48,13 +71,13 @@ export default function ProposalDetail({ proposal, onClose }) {
                         <DollarSign className="w-4 h-4 text-blue-600" />
                         <span className="text-xs font-medium text-blue-700">Budget</span>
                     </div>
-                    <div className="font-bold text-2xl text-blue-900">{proposal.budget}</div>
-                    <div className="text-xs text-blue-600 mt-1">{proposal.paymentType}</div>
-                    {proposal.isNegotiable && (
+                    <div className="font-bold text-2xl text-blue-900">{proposal.customPrice}</div>
+                    {/* <div className="text-xs text-blue-600 mt-1">{proposal.paymentType}</div> */}
+                    {/* {proposal.isNegotiable && (
                         <span className="inline-block mt-2 px-2 py-0.5 bg-blue-200 text-blue-700 rounded text-xs font-medium">
                         Negotiable
                         </span>
-                    )}
+                    )} */}
                     </div>
 
                     {/* Timeline */}
@@ -63,13 +86,13 @@ export default function ProposalDetail({ proposal, onClose }) {
                         <Calendar className="w-4 h-4 text-gray-600" />
                         <span className="text-xs font-medium text-gray-700">Timeline</span>
                     </div>
-                    <div className="font-bold text-2xl text-gray-900">{proposal.deadline}</div>
-                    <div className="text-xs text-gray-600 mt-1">{proposal.duration} audio</div>
+                     <div className="font-bold text-2xl text-gray-900">{proposal.deliveryDays} Days</div>
+                    {/* <div className="text-xs text-gray-600 mt-1">{proposal.duration} audio</div> */}
                     </div>
                 </div>
 
                 {/* Voice Requirements */}
-                <div className="px-6 py-4 bg-gradient-to-r from-blue-50/50 to-purple-50/50">
+                {/* <div className="px-6 py-4 bg-gradient-to-r from-blue-50/50 to-purple-50/50">
                     <h5 className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">Voice Requirements</h5>
                     <div className="flex flex-wrap gap-2">
                     {proposal.voiceRequirements.language.map((lang, index) => (
@@ -84,10 +107,10 @@ export default function ProposalDetail({ proposal, onClose }) {
                         🎵 {proposal.voiceRequirements.tone}
                     </span>
                     </div>
-                </div>
+                </div> */}
 
                 {/* Attachments */}
-                {proposal.attachments && proposal.attachments.length > 0 && (
+                {/* {proposal.attachments && proposal.attachments.length > 0 && (
                     <div className="px-6 py-4 border-t border-gray-100">
                     <h5 className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">Attachments</h5>
                     <div className="flex flex-wrap gap-2">
@@ -99,44 +122,44 @@ export default function ProposalDetail({ proposal, onClose }) {
                         ))}
                     </div>
                     </div>
-                )}
+                )} */}
             </div>
 
           <DialogFooter>
-             {proposal.status === 'pending' && (
+             {proposal.status === 'PENDING' && (
           <>
             <button 
-              onClick={() => onAccept(proposal.id)}
+              onClick={() => onAccept(proposal._id)}
               className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
             >
               <CheckCircle className="w-4 h-4" />
               Accept
             </button>
             <button 
-              onClick={() => onMessage(proposal.id)}
+              onClick={() => onMessage(proposal._id)}
               className="flex-1 bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-medium py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-200"
             >
               <MessageCircle className="w-4 h-4" />
               Message
             </button>
             <button 
-              onClick={() => onReject(proposal.id)}
+              onClick={() => onReject(proposal._id)}
               className="bg-white border-2 border-red-300 text-red-600 hover:bg-red-50 font-medium py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-200"
             >
               <XCircle className="w-4 h-4" />
             </button>
           </>
         )}
-        {proposal.status === 'accepted' && (
+        {proposal.status === 'ACCEPTED' && (
           <button 
-            onClick={() => onMessage(proposal.id)}
+            
             className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-200"
           >
             <MessageCircle className="w-4 h-4" />
-            Message Client
+            Create Contract
           </button>
         )}
-        {proposal.status === 'rejected' && (
+        {proposal.status === 'REJECTED' && (
           <div className="flex-1 text-center py-3 text-gray-500 text-sm">
             This proposal was rejected
           </div>

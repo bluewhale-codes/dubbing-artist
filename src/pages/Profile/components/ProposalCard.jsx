@@ -2,15 +2,23 @@ import { useState } from 'react';
 import { Clock, DollarSign, FileText, MessageCircle, CheckCircle, XCircle, Calendar, Zap, TrendingUp , Eye} from 'lucide-react';
 import { Button } from '../../../components/ui/Button';
 import ProposalDetail from './ProposalDetail';
+import ContractForm from './ContractForm';
+import FormDialog from '../Forms/FormDialog';
 export function ProposalCard({ proposal, onAccept, onReject, onMessage }) {
   const [open,setOpen] = useState(false);
- 
+  const [open2,setOpen2] = useState(false);
+ const FormToggle = ()=>{
+        setOpen2(!open2);
+   }
+
+
+
   const getStatusColor = (status) => {
     
     switch (status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-700 border-yellow-300';
-      case 'accepted': return 'bg-green-100 text-green-700 border-green-300';
-      case 'rejected': return 'bg-red-100 text-red-700 border-red-300';
+      case 'PENDING': return 'bg-yellow-100 text-yellow-700 border-yellow-300';
+      case 'ACCEPTED': return 'bg-green-100 text-green-700 border-green-300';
+      case 'REJECTED': return 'bg-red-100 text-red-700 border-red-300';
       default: return 'bg-gray-100 text-gray-700 border-gray-300';
     }
   };
@@ -26,6 +34,20 @@ export function ProposalCard({ proposal, onAccept, onReject, onMessage }) {
     return colors[category] || 'bg-gray-100 text-gray-700';
   };
 
+  const timeAgo = (date) => {
+          const now = new Date();
+          const seconds = Math.floor((now - new Date(date)) / 1000);
+
+          const minutes = Math.floor(seconds / 60);
+          const hours = Math.floor(seconds / 3600);
+          const days = Math.floor(seconds / 86400);
+
+          if (seconds < 60) return `${seconds} seconds ago`;
+          if (minutes < 60) return `${minutes} minutes ago`;
+          if (hours < 24) return `${hours} hours ago`;
+          return `${days} days ago`;
+  }
+
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
       {/* Header with Status and Urgency */}
@@ -35,16 +57,17 @@ export function ProposalCard({ proposal, onAccept, onReject, onMessage }) {
             <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(proposal.status)}`}>
               {proposal.status.charAt(0).toUpperCase() + proposal.status.slice(1)}
             </span>
-            {proposal.isUrgent && (
+            {/* {proposal.isUrgent && (
               <span className="px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700 border border-red-300 flex items-center gap-1 animate-pulse">
                 <Zap className="w-3 h-3" />
                 Urgent
               </span>
-            )}
+            )} */}
           </div>
           <span className="text-xs text-gray-500 flex items-center gap-1">
             <Clock className="w-3 h-3" />
-            {proposal.timeAgo}
+            {timeAgo(proposal.createdAt)}
+            
           </span>
         </div>
 
@@ -53,13 +76,15 @@ export function ProposalCard({ proposal, onAccept, onReject, onMessage }) {
           <div className="mb-4">
             <div className="flex items-center gap-2 mb-1">
               <TrendingUp className="w-4 h-4 text-blue-600" />
-              <span className="text-sm font-medium text-blue-600">{proposal.matchScore}% Match</span>
+              {/* <span className="text-sm font-medium text-blue-600">{proposal.matchScore}% Match</span> */}
+              <span className="text-sm font-medium text-blue-600">78% Match</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
+              {/* <div 
                 className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500"
                 style={{ width: `${proposal.matchScore}%` }}
-              />
+              /> */}
+              
             </div>
           </div>
         )}
@@ -67,9 +92,10 @@ export function ProposalCard({ proposal, onAccept, onReject, onMessage }) {
         {/* Project Information */}
         <div className="mb-4">
           <h3 className="text-xl font-semibold text-gray-800 mb-2">{proposal.title}</h3>
-          <p className="text-gray-600 text-sm leading-relaxed line-clamp-2 mb-3">{proposal.description}</p>
+          <p className="text-gray-600 text-sm leading-relaxed line-clamp-2 mb-3">{proposal.message}</p>
           <span className={`inline-block px-3 py-1 rounded-lg text-xs font-medium ${getCategoryColor(proposal.category)}`}>
             {proposal.category}
+           
           </span>
         </div>
       </div>
@@ -85,7 +111,12 @@ export function ProposalCard({ proposal, onAccept, onReject, onMessage }) {
         <button className="cursor-pointer"onClick={()=>setOpen(true)}>
           View Detail
         </button>
+        <button className="cursor-pointer" onClick={()=>setOpen2(true)}>
+          Create Contract
+        </button>
         {open==true && <ProposalDetail proposal={proposal} onClose={()=>setOpen(false)}/>}
+
+          {open2 && <FormDialog Comp={ContractForm} onClose={()=>FormToggle()}/>}
         {/* {proposal.status === 'pending' && (
           <>
             <button 
