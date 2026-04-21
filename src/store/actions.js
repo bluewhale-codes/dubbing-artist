@@ -204,3 +204,37 @@ export const acceptProposal = createAsyncThunk(
         }
      }
 )
+
+
+export const getContract = createAsyncThunk(
+     "get/contract",
+  async (id, { rejectWithValue }) => {
+    try {
+      const link = `http://localhost:3000/profile/my-contract/${id}`; // ✅ your GET endpoint
+
+      const res = await axios.get(link,{withCredentials:true});
+
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Something went wrong"
+      );
+    }
+  }
+)
+export const logout = createAsyncThunk(
+     "user/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const link = "http://localhost:3000/api/logout"; // ✅ your GET endpoint
+
+      const res = await axios.post(link,{},{withCredentials:true});
+
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Something went wrong"
+      );
+    }
+  }
+)

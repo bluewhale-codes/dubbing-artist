@@ -17,7 +17,6 @@ export default function ProfilePage() {
   const {user , loading } = useSelector((state)=>state.profileSlice);
 
   
-   
   // Mock artist data
   const artistData = {
     profileImage: "https://images.unsplash.com/photo-1740102075520-fe22a53035cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjB2b2ljZSUyMGFjdG9yJTIwcG9ydHJhaXR8ZW58MXx8fHwxNzczNzMwNTU5fDA&ixlib=rb-4.1.0&q=80&w=1080",
@@ -70,11 +69,11 @@ I believe in delivering excellence and ensuring that every line resonates with a
           <div className="lg:col-span-1">
             <div className="lg:sticky lg:top-8">
               <ProfileSummaryCard
-                profileImage={artistData.profileImage}
+                profileImage={user?.profile?.avatar?.url}
                 name={artistData.name}
-                dubbingLanguages={artistData.dubbingLanguages}
-                location={artistData.location}
-                experience={artistData.experience}
+                dubbingLanguages={user?.profile?.dubbingLanguages}
+                location={user?.profile?.location}
+                experience={user?.profile?.experience}
                 languages={artistData.languages}
                 rating={artistData.rating}
                 reviewCount={artistData.reviewCount}
@@ -86,7 +85,7 @@ I believe in delivering excellence and ensuring that every line resonates with a
           {/* Right Column - About Section (2/3 width on desktop) */}
           <div className="lg:col-span-2">
             
-            <AboutSection/>
+            <AboutSection  about={user?.profile?.about}/>
              {user?.user?.role==="artist" && <div><VoiceDemoSection/>
             <SkillsSection/>
             <LanguagesSection/>

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { registerUser,loginUser } from "./actions";
+import { registerUser,loginUser, logout } from "./actions";
 import axios from "axios";
 
 const initialState = {
@@ -37,6 +37,19 @@ const userauthslice = createSlice({
         state.success = true;
       })
       .addCase(loginUser.rejected,(state,action)=>{
+        state.loading = false
+        state.error = action.payload;
+      })
+      
+      // Logout
+      .addCase(logout.pending,(state,action)=>{
+        state.loading = true
+      })
+      .addCase(logout.fulfilled,(state,action)=>{
+        state.loading = false
+        
+      })
+      .addCase(logout.rejected,(state,action)=>{
         state.loading = false
         state.error = action.payload;
       })

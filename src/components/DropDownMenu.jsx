@@ -1,5 +1,7 @@
 "use client"
 
+import { useNavigate } from "react-router";
+import { logout } from "../store/actions";
 import {Button} from "./ui/Button"
 import {
   DropdownMenu,
@@ -15,13 +17,21 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu"
+import { useDispatch } from "react-redux"
 
-export function DropdownMenuHeader() {
+export function DropdownMenuHeader({userImage}) {
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const logoutUser = () =>{
+    dispatch(logout());
+    navigate("/")
+  }
   return (
     <DropdownMenu className="cursor-pointer">
       <DropdownMenuTrigger render={<button className="cursor-pointer w-11 h-11 mt-2 rounded-full overflow-hidden ring-2 ring-gray-200 hover:ring-blue-500 transition">
   <img
-    src="https://res.cloudinary.com/dycjjaxsk/image/upload/v1703960298/Avatars/neqykvmk0spvibjk0p4n.jpg"
+    src={userImage}
     alt="profile"
     className="w-full h-full object-cover"
   />
@@ -70,8 +80,10 @@ export function DropdownMenuHeader() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator /> */}
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem >
+            <button onClick={logoutUser} className="cursor-pointer">
             Log out
+            </button>
             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>

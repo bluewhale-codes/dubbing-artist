@@ -3,7 +3,7 @@ import ProfileSummaryForm from './ProfileSummaryForm'
 import { Dialog, DialogContent, DialogDescription,DialogHeader, DialogTitle } from "../../../components/ui/dialog";
 import { useSelector } from 'react-redux';
 import Notification from '../notificationBtns/Notification';
-const FormDialog = ({onClose,Comp}) => {
+const FormDialog = ({onClose,Comp,id="hello"}) => {
    
   const {notification}=useSelector((state)=>state.profileSlice);
   return (
@@ -14,7 +14,7 @@ const FormDialog = ({onClose,Comp}) => {
              
              {/* Profile Form */}
              <div>
-                  <Comp/>
+                  <Comp id={id}/>
                  
              </div>
 

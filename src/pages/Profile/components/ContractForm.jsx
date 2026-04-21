@@ -7,8 +7,9 @@ import { Label } from '../../../components/ui/label';
 import { Textarea } from '../../../components/ui/textarea';
 import { Badge } from '../../../components/ui/badge';
 import { cn } from '../../../components/ui/utils';
+import axios from 'axios';
 
-export default function ContractForm(id) {
+export default function ContractForm({id}) {
   const [formData, setFormData] = useState({
     proposalId: id,
     scopeOfWork: '',
@@ -133,7 +134,7 @@ export default function ContractForm(id) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setTouched({
@@ -144,8 +145,19 @@ export default function ContractForm(id) {
 
     if (validateForm()) {
 
-      const mydate = 
-      console.log('Form submitted:', formData);
+      const mydata = new FormData();
+      Object.keys(formData).forEach((key)=>{
+         mydata.append(key,formData[key]);
+      })
+      console.log(mydata)
+
+       try {
+         const res = await axios.post("http://localhost:3000/profile/create-contract",mydata,{withCredentials:true});
+         console.log(res.data);
+       } catch (error) {
+          console.log(error.response.data)
+       }
+      
       setIsSubmitted(true);
 
       setTimeout(() => {

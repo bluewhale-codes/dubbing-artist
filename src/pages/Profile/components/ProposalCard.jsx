@@ -4,9 +4,11 @@ import { Button } from '../../../components/ui/Button';
 import ProposalDetail from './ProposalDetail';
 import ContractForm from './ContractForm';
 import FormDialog from '../Forms/FormDialog';
+import { useNavigate } from 'react-router';
 export function ProposalCard({ proposal, onAccept, onReject, onMessage }) {
   const [open,setOpen] = useState(false);
   const [open2,setOpen2] = useState(false);
+  const navigate = useNavigate();
  const FormToggle = ()=>{
         setOpen2(!open2);
    }
@@ -114,9 +116,12 @@ export function ProposalCard({ proposal, onAccept, onReject, onMessage }) {
         <button className="cursor-pointer" onClick={()=>setOpen2(true)}>
           Create Contract
         </button>
+        <Button className="cursor-pointer" onClick={()=>navigate(`/auth/contract/${proposal.project}`)}>
+          view Contract
+        </Button>
         {open==true && <ProposalDetail proposal={proposal} onClose={()=>setOpen(false)}/>}
 
-          {open2 && <FormDialog Comp={ContractForm} onClose={()=>FormToggle()}/>}
+          {open2 && <FormDialog Comp={ContractForm} id={proposal._id} onClose={()=>FormToggle()}/>}
         {/* {proposal.status === 'pending' && (
           <>
             <button 

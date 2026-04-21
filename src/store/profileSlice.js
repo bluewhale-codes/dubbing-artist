@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { registerAudio , registerPortfolio , registerUserdetail,registerProject, getAllProjects, getProjectDetail, getUser,getProposals, createProposal, acceptProposal} from "./actions";
+import { registerAudio , registerPortfolio , registerUserdetail,registerProject, getAllProjects, getProjectDetail, getUser,getProposals, createProposal, acceptProposal, getContract} from "./actions";
 
 const initialState = {
     loading:false,
@@ -13,6 +13,7 @@ const initialState = {
     projects:[],
     project:{},
     proposals:[],
+    contract:{},
     isAuthenticated:false,
     user:{}
     
@@ -182,6 +183,21 @@ const profileSlice = createSlice({
         state.notification.message = "Proposal Accepted"
       })
       .addCase(acceptProposal.rejected , (state,action)=>{
+        state.loading = false
+        state.notification.type = "error"
+        state.notification.message = action.payload.message;
+      })
+
+      // Get Contract
+       .addCase(getContract.pending , (state)=>{
+        state.loading = true
+      })
+      .addCase(getContract.fulfilled , (state,action)=>{
+        state.loading = false
+        state.contract = action.payload.contract
+        
+      })
+      .addCase(getContract.rejected , (state,action)=>{
         state.loading = false
         state.notification.type = "error"
         state.notification.message = action.payload.message;

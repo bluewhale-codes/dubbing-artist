@@ -3,7 +3,7 @@ import { Button } from '../../../components/ui/Button';
 import  FormDialog from '../Forms/FormDialog';
 import { useState } from 'react';
 import AboutForm from '../Forms/AboutForm';
-export function AboutSection() {
+export function AboutSection({about}) {
 
   const [open,setOpen] = useState(false);
 
@@ -39,22 +39,13 @@ export function AboutSection() {
         </div>
         
         <div className="prose max-w-none">
-          <p className="text-gray-700 leading-relaxed mb-4">
-            Hello! I'm Priya Sharma, a professional dubbing artist with over 8 years of experience in the voice-over industry. 
-            I specialize in Hindi and English dubbing for films, animations, commercials, and digital content.
-          </p>
           
-          <p className="text-gray-700 leading-relaxed mb-4">
-            My journey in voice acting began during my theater days, and I've had the privilege of lending my voice to 
-            numerous Bollywood films, animated series, and international documentaries. I work from my professional-grade 
-            home studio, ensuring broadcast-quality recordings for every project.
-          </p>
 
-          <p className="text-gray-700 leading-relaxed mb-6">
+          {about ?  <p className="text-gray-700 leading-relaxed mb-6">
             I've collaborated with leading production houses, YouTubers with millions of subscribers, independent filmmakers, 
             and advertising agencies. Whether it's a dramatic movie scene, an energetic cartoon character, or a soothing 
             narration, I bring versatility and professionalism to every project.
-          </p>
+          </p>: "Not Provided Please Complete Your Profile"}
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
             <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-5 border border-purple-100">

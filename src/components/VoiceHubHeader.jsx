@@ -56,9 +56,9 @@ export default function VoiceHubHeader() {
             <a href="/jobs" className="text-gray-700 hover:text-cyan-600 transition-colors font-medium">
               Jobs
             </a>
-            <a href="/proposal" className="text-gray-700 hover:text-cyan-600 transition-colors font-medium">
+            {isAuthenticated && <a href="/proposal" className="text-gray-700 hover:text-cyan-600 transition-colors font-medium">
               My proposals
-            </a>
+            </a> }
           </div>
 
           {/* Desktop Buttons */}
@@ -68,7 +68,7 @@ export default function VoiceHubHeader() {
              <div className='flex justify-center align-item'>
               
           
-               <DropdownMenuHeader/>
+               <DropdownMenuHeader userImage={user?.profile?.avatar?.url} />
               
               </div>
              :  <Button asChild={true} className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white shadow-lg shadow-cyan-500/30">

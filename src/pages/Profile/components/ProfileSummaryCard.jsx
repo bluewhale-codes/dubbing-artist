@@ -36,7 +36,7 @@ export function ProfileSummaryCard({
         </Avatar> */}
          <div className="relative">
               <img
-                src="https://images.unsplash.com/photo-1548597180-23cc88a9a6f6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBpbmRpYW4lMjB3b21hbiUyMHBvcnRyYWl0JTIwaGVhZHNob3R8ZW58MXx8fHwxNzczMTIxNjQ0fDA&ixlib=rb-4.1.0&q=80&w=1080"
+                src={profileImage}
                 alt="Profile"
                 className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-white shadow-xl object-cover"
               />
@@ -76,7 +76,9 @@ export function ProfileSummaryCard({
           <div>
             <div className="text-sm text-gray-500 mb-1">Dubbing Languages</div>
             <div className="font-medium">
-              {dubbingLanguages.join(", ")}
+              {dubbingLanguages && dubbingLanguages.length > 0
+                ? dubbingLanguages.join(", ")
+                : "Not Provided"}
             </div>
           </div>
         </div>
@@ -86,7 +88,9 @@ export function ProfileSummaryCard({
           <MapPin className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
           <div>
             <div className="text-sm text-gray-500 mb-1">Location</div>
-            <div className="font-medium">{location}</div>
+            <div className="font-medium">{location 
+                ? location
+                : "Not Provided"}</div>
           </div>
         </div>
 
@@ -95,7 +99,9 @@ export function ProfileSummaryCard({
           <Briefcase className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
           <div>
             <div className="text-sm text-gray-500 mb-1">Experience</div>
-            <div className="font-medium">{experience} years</div>
+            <div className="font-medium">{experience 
+                ? experience + "years"
+                : "Not Provided"} </div>
           </div>
         </div>
 

@@ -16,6 +16,8 @@ import store from './store/store'
 import ProjectDetailPage from './pages/Jobs/ProjectDetailPage'
 import Hello from './components/Hello'
 import ScrollytellingSection from './components/ScrollytellingSection'
+import Contract from './pages/Project/Contract'
+import ProtectedRoute from './components/ProtectedRoute'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <>
@@ -23,18 +25,26 @@ const router = createBrowserRouter(createRoutesFromElements(
               <Route index element={<Home/>}/>
               <Route path='test/' element={<Test/>}/>
               <Route path='marketplace/' element={<ArtistsList/>}/>
+               
+              <Route element={<ProtectedRoute/>}>
               <Route path='profile/' element={<ProfilePage/>}/>
               <Route path='createProject/' element={<CreateJob/>}/>
               <Route path='proposal/' element={<ClientProposal/>}/>
-              <Route path='jobs/' element={<JobLists/>}/>
+              </Route>
+
+
               <Route path='detail/:id' element={<ProjectDetailPage/>}/>
+
+
+              <Route path='jobs/' element={<JobLists/>}/>
+            
               <Route path='hello' element={<Hello/>}/>
               <Route path='mystory' element={<ScrollytellingSection/>}/>
               
       </Route>
       <Route path='/auth' element={<AuthLayout/>}>
                <Route path='login' element={<AuthPage/>}/>
-               
+               <Route path='contract/:id' element={<Contract/>}/>
       </Route>
      
   </>
